@@ -16,7 +16,7 @@ package com.johnny.rxflux;
  */
 
 import android.support.annotation.NonNull;
-import android.util.ArrayMap;
+import android.support.v4.util.ArrayMap;
 
 /**
  * description

@@ -39,7 +39,7 @@ public class Logger {
         logEnabled = enabled;
     }
 
-    public static void logRegisterStore(String storeName, String[] actionType) {
+    public static void logRegisterStore(@NonNull String storeName, String[] actionType) {
         if(logEnabled) {
             if(null == actionType || actionType.length == 0) {
                 Log.d(TAG, "Store " + storeName + " has registered all action");
@@ -49,7 +49,7 @@ public class Logger {
         }
     }
 
-    public static void logUnregisterStore(String storeName) {
+    public static void logUnregisterStore(@NonNull String storeName) {
         if(logEnabled) {
             Log.d(TAG, "Store " + storeName + " has unregistered");
         }
@@ -63,29 +63,29 @@ public class Logger {
 
     public static void logPostErrorAction(@NonNull Action action, Throwable throwable) {
         if(logEnabled) {
-            Log.d(TAG, "Post error action " + action.getType() + " cause message : " + throwable.getMessage());
+            Log.d(TAG, "Post error action " + action.getType() + " cause message : " + (null == throwable ? "null" : throwable.getMessage()));
         }
     }
 
-    public static void logOnAction(String storeName, Action action) {
+    public static void logOnAction(@NonNull String storeName, @NonNull Action action) {
         if(logEnabled) {
             Log.d(TAG, "Store " + storeName + " onAction " + action.toString());
         }
     }
 
-    public static void logOnError(String storeName, String actionName) {
+    public static void logOnError(@NonNull String storeName, @NonNull String actionName) {
         if(logEnabled) {
             Log.d(TAG, "Store " + storeName + " onError " + actionName);
         }
     }
 
-    public static void logPostStoreChange(String storeName, Store.StoreChangeEvent event) {
+    public static void logPostStoreChange(@NonNull String storeName, @NonNull Store.StoreChangeEvent event) {
         if(logEnabled) {
             Log.d(TAG, "Store " + storeName + " post change " + event.getClass().getSimpleName());
         }
     }
 
-    public static void logPostStoreError(String storeName, Store.StoreChangeEvent event) {
+    public static void logPostStoreError(@NonNull String storeName, @NonNull Store.StoreChangeEvent event) {
         if(logEnabled) {
             Log.d(TAG, "Store " + storeName + " post error " + event.getClass().getSimpleName());
         }

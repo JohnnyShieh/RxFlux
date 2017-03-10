@@ -15,7 +15,7 @@ package com.johnny.rxflux;
  * limitations under the License.
  */
 
-import android.util.ArrayMap;
+import android.support.v4.util.ArrayMap;
 
 /**
  * Object class that hold the type of action and the data we want to attach to it
@@ -25,7 +25,7 @@ import android.util.ArrayMap;
  */
 public class Action {
 
-    static final String ERROR_PREFIX = "error_";
+    private static final String ERROR_PREFIX = "error_";
 
     private final String type;
     private final ArrayMap<String, Object> data;
@@ -50,7 +50,8 @@ public class Action {
         return data;
     }
 
-    @SuppressWarnings("unchecked") public <T> T get(String key) {
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key) {
         return (T) data.get(key);
     }
 

@@ -37,6 +37,9 @@ public abstract class Store<T extends Store.StoreChangeEvent> extends Observable
         mDisposable = disposable;
     }
 
+    /**
+     * You should call this method to avoid memroy leak when activity or fragment destroyed.
+     */
     public void unRegister() {
         Logger.logUnregisterStore(getClass().getSimpleName());
         setDisposable(null);

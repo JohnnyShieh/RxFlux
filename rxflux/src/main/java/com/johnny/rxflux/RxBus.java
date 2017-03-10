@@ -15,23 +15,23 @@ package com.johnny.rxflux;
  * limitations under the License.
  */
 
-import io.reactivex.Flowable;
-import io.reactivex.processors.FlowableProcessor;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 /**
- * Rx2 versoion of EventBus
+ * Rx2 versoion of EventBus, use no backpressure Observable, because postAction and onAction are synchronous.
  *
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.0
  */
 public class RxBus {
 
-    private final FlowableProcessor<Object> mBus;
+    private final Subject<Object> mBus;
 
     private RxBus() {
         // toSerialized method made bus thread safe
-        mBus = PublishProcessor.create().toSerialized();
+        mBus = PublishSubject.create().toSerialized();
     }
 
     public static RxBus get() {
@@ -42,12 +42,16 @@ public class RxBus {
         mBus.onNext(obj);
     }
 
-    public <T> Flowable<T> toFlowable(Class<T> tClass) {
+    public <T> Observable<T> toObservable(Class<T> tClass) {
         return mBus.ofType(tClass);
     }
 
-    public boolean hasSubscribers() {
-        return mBus.hasSubscribers();
+    public Observable<Object> toObservable() {
+        return mBus;
+    }
+
+    public boolean hasObservers() {
+        return mBus.hasObservers();
     }
 
     private static class Holder {
