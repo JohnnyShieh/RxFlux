@@ -15,8 +15,6 @@ package com.johnny.rxflux;
  * limitations under the License.
  */
 
-import com.johnny.rxflux.util.Logger;
-
 import android.support.annotation.MainThread;
 import android.text.TextUtils;
 
@@ -48,9 +46,11 @@ public class Dispatcher {
             .filter(new Predicate<Action>() {
                 @Override
                 public boolean test(@NonNull Action action) throws Exception {
-                    if(null == actionTypes || actionTypes.length == 0)  return true;
-                    for(String type : actionTypes) {
-                        if(TextUtils.equals(type, action.getType())
+                    if (null == actionTypes || actionTypes.length == 0) {
+                        return true;
+                    }
+                    for (String type : actionTypes) {
+                        if (TextUtils.equals(type, action.getType())
                             || TextUtils.equals(Action.getErrorType(type), action.getType())) {
                             return true;
                         }
@@ -62,16 +62,16 @@ public class Dispatcher {
                 public void accept(@NonNull Action action) throws Exception {
                     // catch exception avoid complete subscribe relationship
                     try {
-                        if(action instanceof ErrorAction) {
+                        if (action instanceof ErrorAction) {
                             Logger.logOnError(store.getClass().getSimpleName(), action.getType());
                             ErrorAction errorAction = (ErrorAction) action;
                             store.onError(errorAction.getAction(), errorAction.getThrowable());
-                        }else {
+                        } else {
                             Logger.logOnAction(store.getClass().getSimpleName(), action);
                             store.onAction(action);
                         }
-                    }catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        Logger.logHandleActionException(store.getClass().getSimpleName(), action.getType(), e);
                     }
                 }
             })
@@ -91,6 +91,7 @@ public class Dispatcher {
     }
 
     private static class Holder {
+
         private static final Dispatcher DISPATCHER = new Dispatcher();
     }
 }

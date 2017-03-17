@@ -1,4 +1,4 @@
-package com.johnny.rxflux.util;
+package com.johnny.rxflux;
 /*
  * Copyright (C) 2017 Johnny Shieh Open Source Project
  *
@@ -15,9 +15,6 @@ package com.johnny.rxflux.util;
  * limitations under the License.
  */
 
-import com.johnny.rxflux.Action;
-import com.johnny.rxflux.Store;
-
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -33,13 +30,13 @@ public class Logger {
 
     private static final String TAG = "RxFlux";
 
-    private static boolean logEnabled = true;
+    private static boolean logEnabled = BuildConfig.DEBUG;
 
     public static void setLogEnabled(boolean enabled) {
         logEnabled = enabled;
     }
 
-    public static void logRegisterStore(@NonNull String storeName, String[] actionType) {
+    static void logRegisterStore(@NonNull String storeName, String[] actionType) {
         if(logEnabled) {
             if(null == actionType || actionType.length == 0) {
                 Log.d(TAG, "Store " + storeName + " has registered all action");
@@ -49,45 +46,51 @@ public class Logger {
         }
     }
 
-    public static void logUnregisterStore(@NonNull String storeName) {
+    static void logUnregisterStore(@NonNull String storeName) {
         if(logEnabled) {
             Log.d(TAG, "Store " + storeName + " has unregistered");
         }
     }
 
-    public static void logPostAction(@NonNull Action action) {
+    static void logPostAction(@NonNull Action action) {
         if(logEnabled) {
             Log.d(TAG, "Post " + action.toString());
         }
     }
 
-    public static void logPostErrorAction(@NonNull Action action, Throwable throwable) {
+    static void logPostErrorAction(@NonNull Action action, Throwable throwable) {
         if(logEnabled) {
-            Log.d(TAG, "Post error action " + action.getType() + " cause message : " + (null == throwable ? "null" : throwable.getMessage()));
+            Log.d(TAG, "Post error action " + action.toString() + " cause message : " + (null == throwable ? "null" : throwable.getMessage()));
         }
     }
 
-    public static void logOnAction(@NonNull String storeName, @NonNull Action action) {
+    static void logOnAction(@NonNull String storeName, @NonNull Action action) {
         if(logEnabled) {
             Log.d(TAG, "Store " + storeName + " onAction " + action.toString());
         }
     }
 
-    public static void logOnError(@NonNull String storeName, @NonNull String actionName) {
+    static void logOnError(@NonNull String storeName, @NonNull String actionName) {
         if(logEnabled) {
             Log.d(TAG, "Store " + storeName + " onError " + actionName);
         }
     }
 
-    public static void logPostStoreChange(@NonNull String storeName, @NonNull Store.StoreChangeEvent event) {
+    static void logPostStoreChange(@NonNull String storeName, @NonNull Store.StoreChangeEvent event) {
         if(logEnabled) {
             Log.d(TAG, "Store " + storeName + " post change " + event.getClass().getSimpleName());
         }
     }
 
-    public static void logPostStoreError(@NonNull String storeName, @NonNull Store.StoreChangeEvent event) {
+    static void logPostStoreError(@NonNull String storeName, @NonNull Store.StoreChangeEvent event) {
         if(logEnabled) {
             Log.d(TAG, "Store " + storeName + " post error " + event.getClass().getSimpleName());
+        }
+    }
+
+    static void logHandleActionException(@NonNull String storeName, @NonNull String actionName, Exception e) {
+        if(logEnabled) {
+            Log.d(TAG, "Store " + storeName + " handle action " + actionName + " throws Exception.\n", e);
         }
     }
 }

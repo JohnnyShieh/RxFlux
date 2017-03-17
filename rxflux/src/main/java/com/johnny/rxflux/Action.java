@@ -32,7 +32,7 @@ public class Action {
 
     private final String errorType;
 
-    Action(String type, ArrayMap<String, Object> data) {
+    protected Action(String type, ArrayMap<String, Object> data) {
         this.type = type;
         this.data = data;
         this.errorType = getErrorType(type);

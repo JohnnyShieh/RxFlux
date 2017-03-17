@@ -15,7 +15,6 @@ package com.johnny.rxflux;
  * limitations under the License.
  */
 
-import com.johnny.rxflux.util.Logger;
 import com.johnny.rxflux.util.Observable;
 
 import io.reactivex.disposables.Disposable;
