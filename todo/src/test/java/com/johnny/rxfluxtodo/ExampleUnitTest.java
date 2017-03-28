@@ -1,4 +1,4 @@
-package com.johnny.rxflux;
+package com.johnny.rxfluxtodo;
 
 import org.junit.Test;
 

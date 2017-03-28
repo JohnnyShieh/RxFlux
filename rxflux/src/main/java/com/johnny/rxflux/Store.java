@@ -59,5 +59,5 @@ public abstract class Store<T extends Store.StoreChangeEvent> extends Observable
         notifyError(t);
     }
 
-    public static abstract class StoreChangeEvent {}
+    public static class StoreChangeEvent {}
 }

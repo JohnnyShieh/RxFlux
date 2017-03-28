@@ -26,8 +26,8 @@ import android.support.v4.util.ArrayMap;
  */
 public class ErrorAction extends Action {
 
-    public static final String KEY_ACTION = "RxError_Action";
-    public static final String KEY_THROWABLE = "RxError_Throwable";
+    private static final String KEY_ACTION = "RxError_Action";
+    private static final String KEY_THROWABLE = "RxError_Throwable";
 
     private ErrorAction(String type, ArrayMap<String, Object> data) {
         super(type, data);
