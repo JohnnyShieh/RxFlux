@@ -6,7 +6,7 @@ I have tried MVC, MVP and Clean architecture on Android. But I love the Flux arc
 
 **[Flux Architecture][flux-arch]** is used by Facebook to build their client- side web applications. Like _Clean Architecture_ it is not intended for mobile apps, but its features and simplicity will allow us to adapt it very well to Android projects.
 
-![](https://github.com/JohnnyShieh/RxFlux/images/flux-graph-simple.png)
+![](https://github.com/JohnnyShieh/RxFlux/blob/master/images/flux-graph-simple.png)
 
 There are two **key features** to understand Flux:
 
@@ -63,7 +63,7 @@ No other component of the system should need to know anything about the status o
 
 Finally, stores must **expose an interface** to obtain application Status. This way, view elements can query the Stores and update application UI in response.
 
-![](https://github.com/JohnnyShieh/RxFlux/images/flux-store.png)
+![](https://github.com/JohnnyShieh/RxFlux/blob/master/images/flux-store.png)
 
 In my implementation, a Store object can only be listened to one View, but one View can listen to multiple Store object. The reason is Store maintains the part state of a View, so if another View interested the same Store, it can listen to another instance of the same Store.
 
@@ -71,7 +71,7 @@ In my implementation, a Store object can only be listened to one View, but one V
 
 In the initial Flux graph I intentionally skipped one part: **network calls**. Next graph completes first one adding more details:
 
-![](https://github.com/JohnnyShieh/RxFlux/images/flux-graph-complete.png)
+![](https://github.com/JohnnyShieh/RxFlux/blob/master/images/flux-graph-complete.png)
 
 Asynchronous network calls are triggered from an **Actions Creator**.
 A Network Adapter makes the asynchronous call to the corresponding API and returns the result to the Actions Creator.
