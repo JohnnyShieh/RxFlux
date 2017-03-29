@@ -119,7 +119,7 @@ public class TodoActivity extends AppCompatActivity implements StoreObserver<Sto
     @Override
     protected void onResume() {
         super.onResume();
-        mTodoStore.addObserver(this);
+        mTodoStore.setObserver(this);
         Dispatcher.get().register(mTodoStore,
             ActionType.TODO_COMPLETE,
             ActionType.TODO_CREATE,

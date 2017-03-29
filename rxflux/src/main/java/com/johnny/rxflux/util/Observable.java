@@ -15,8 +15,6 @@ package com.johnny.rxflux.util;
  * limitations under the License.
  */
 
-import java.util.Vector;
-
 /**
  * description
  *
@@ -25,39 +23,29 @@ import java.util.Vector;
  */
 public class Observable<T> {
 
-    private Vector<Observer<T>> mObservers = new Vector<>(1);
+    private Observer<T> mObserver;
 
-    public synchronized void addObserver(Observer<T> observer) {
+    public void setObserver(Observer<T> observer) {
         if(null == observer) {
             throw new NullPointerException();
         }else {
-            if(!mObservers.contains(observer)) {
-                mObservers.addElement(observer);
-            }
+            mObserver = observer;
         }
     }
 
-    public synchronized void deleteObserver(Observer<T> observer) {
-        mObservers.removeElement(observer);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void notifyChange(T t) {
-        Object[] array = mObservers.toArray();
-        for(int i = array.length - 1; i >= 0; i --) {
-            ((Observer<T>)array[i]).onChange(t);
+    protected void notifyChange(T t) {
+        if (null != mObserver) {
+            mObserver.onChange(t);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void notifyError(T t) {
-        Object[] array = mObservers.toArray();
-        for(int i = array.length - 1; i >= 0; i --) {
-            ((Observer<T>)array[i]).onError(t);
+    protected void notifyError(T t) {
+        if (null != mObserver) {
+            mObserver.onError(t);
         }
     }
 
-    public synchronized void deleteObservers() {
-        mObservers.removeAllElements();
+    protected void removeObserver() {
+        mObserver = null;
     }
 }

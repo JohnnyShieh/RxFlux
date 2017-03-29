@@ -42,7 +42,7 @@ public abstract class Store<T extends Store.StoreChangeEvent> extends Observable
     public void unRegister() {
         Logger.logUnregisterStore(getClass().getSimpleName());
         setDisposable(null);
-        deleteObservers();
+        removeObserver();
     }
 
     public abstract void onAction(Action action);
