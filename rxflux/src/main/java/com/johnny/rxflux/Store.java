@@ -29,6 +29,10 @@ public abstract class Store<T extends Store.StoreChangeEvent> extends Observable
 
     private Disposable mDisposable;
 
+    public void register(String... actionTypes) {
+        Dispatcher.get().register(this, actionTypes);
+    }
+
     void setDisposable(Disposable disposable) {
         if(null != mDisposable && !mDisposable.isDisposed()) {
             mDisposable.dispose();

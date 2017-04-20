@@ -15,6 +15,12 @@ package com.johnny.rxfluxtodo;
  * limitations under the License.
  */
 
+import com.johnny.rxflux.Store;
+import com.johnny.rxflux.StoreObserver;
+import com.johnny.rxfluxtodo.action.ActionType;
+import com.johnny.rxfluxtodo.action.TodoActionCreator;
+import com.johnny.rxfluxtodo.store.TodoStore;
+
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,13 +32,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-
-import com.johnny.rxflux.Dispatcher;
-import com.johnny.rxflux.Store;
-import com.johnny.rxflux.StoreObserver;
-import com.johnny.rxfluxtodo.action.ActionType;
-import com.johnny.rxfluxtodo.action.TodoActionCreator;
-import com.johnny.rxfluxtodo.store.TodoStore;
 
 /**
  * description
@@ -120,8 +119,7 @@ public class TodoActivity extends AppCompatActivity implements StoreObserver<Sto
     protected void onResume() {
         super.onResume();
         mTodoStore.setObserver(this);
-        Dispatcher.get().register(mTodoStore,
-            ActionType.TODO_COMPLETE,
+        mTodoStore.register(ActionType.TODO_COMPLETE,
             ActionType.TODO_CREATE,
             ActionType.TODO_DESTROY,
             ActionType.TODO_DESTROY_COMPLETED,

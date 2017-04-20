@@ -40,7 +40,7 @@ public class Dispatcher {
         return Holder.DISPATCHER;
     }
 
-    public void register(@NonNull final Store store, final String... actionTypes) {
+    void register(@NonNull final Store store, final String... actionTypes) {
         Logger.logRegisterStore(store.getClass().getSimpleName(), actionTypes);
         store.setDisposable(bus.toObservable(Action.class)
             .filter(new Predicate<Action>() {

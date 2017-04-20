@@ -113,7 +113,7 @@ public void getTasks() {
         .subscribe(new Consumer<List<Task>>() {
             @Override
             public void accept(@NonNull List<Task> tasks) throws Exception {
-                action.getData().put("key_tasks"", tasks);
+                action.getData().put("key_tasks", tasks);
                 Dispatcher.get().postAction(action);
             }
         }, new Consumer<Throwable>() {
