@@ -2,6 +2,16 @@
 
 I have tried MVC, MVP and Clean architecture on Android. But I love the Flux architecture mostly because of its **undirectional data flow** and **layering** features. However I can't find an approving implementation of Flux arichtecture, so I wirte RxFlux based on skimarxall's [RxFlux](https://github.com/skimarxall/RxFlux).
 
+## Getting started
+
+**Gradle**
+
+```
+dependencies {
+  compile 'com.johnny.rxflux:rxflux:1.0.1'
+}
+```
+
 ## Introducing Flux Architecture
 
 **[Flux Architecture][flux-arch]** is used by Facebook to build their client- side web applications. Like _Clean Architecture_ it is not intended for mobile apps, but its features and simplicity will allow us to adapt it very well to Android projects.
