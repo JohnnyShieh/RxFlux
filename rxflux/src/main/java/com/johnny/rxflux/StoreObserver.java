@@ -15,15 +15,17 @@ package com.johnny.rxflux;
  * limitations under the License.
  */
 
-import com.johnny.rxflux.util.Observer;
-
 /**
  * A interface which view should implement
  *
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
- * @version 1.0
+ * @version 1.1
  */
-public interface StoreObserver<T extends Store.StoreChangeEvent> extends Observer<T> {
+public interface StoreObserver {
+
+    void onChange(Store store, String actionType);
+
+    void onError(Store store, String actionType);
 
 }
 

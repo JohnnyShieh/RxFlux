@@ -34,7 +34,7 @@ import java.util.List;
  *
  * Created on 2017/3/28
  */
-public class TodoStore extends Store<Store.StoreChangeEvent>{
+public class TodoStore extends Store{
 
     private final List<Todo> mTodoList;
     private Todo mLastDeleted;
@@ -79,7 +79,6 @@ public class TodoStore extends Store<Store.StoreChangeEvent>{
                 toggleCompleteAll();
                 break;
         }
-        postChange(new StoreChangeEvent());
     }
 
     @Override

@@ -62,14 +62,7 @@ public class Dispatcher {
                 public void accept(@NonNull Action action) throws Exception {
                     // catch exception avoid complete subscribe relationship
                     try {
-                        if (action instanceof ErrorAction) {
-                            Logger.logOnError(store.getClass().getSimpleName(), action.getType());
-                            ErrorAction errorAction = (ErrorAction) action;
-                            store.onError(errorAction.getAction(), errorAction.getThrowable());
-                        } else {
-                            Logger.logOnAction(store.getClass().getSimpleName(), action);
-                            store.onAction(action);
-                        }
+                        store.handleAction(action);
                     } catch (Exception e) {
                         Logger.logHandleActionException(store.getClass().getSimpleName(), action.getType(), e);
                     }

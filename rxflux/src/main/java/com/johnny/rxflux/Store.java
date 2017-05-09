@@ -15,17 +15,15 @@ package com.johnny.rxflux;
  * limitations under the License.
  */
 
-import com.johnny.rxflux.util.Observable;
-
 import io.reactivex.disposables.Disposable;
 
 /**
  * Flux store
  *
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
- * @version 1.0
+ * @version 1.1
  */
-public abstract class Store<T extends Store.StoreChangeEvent> extends Observable<T>{
+public abstract class Store extends Observable{
 
     private Disposable mDisposable;
 
@@ -53,15 +51,26 @@ public abstract class Store<T extends Store.StoreChangeEvent> extends Observable
 
     public abstract void onError(Action action, Throwable throwable);
 
-    protected void postChange(T t) {
-        Logger.logPostStoreChange(getClass().getSimpleName(), t);
-        notifyChange(t);
+    void handleAction(Action action) {
+        if (action instanceof ErrorAction) {
+            Logger.logOnError(getClass().getSimpleName(), action.getType());
+            ErrorAction errorAction = (ErrorAction) action;
+            onError(errorAction.getAction(), errorAction.getThrowable());
+            postError(errorAction.getAction().getType());
+        } else {
+            Logger.logOnAction(getClass().getSimpleName(), action);
+            onAction(action);
+            postChange(action.getType());
+        }
     }
 
-    protected void postError(T t) {
-        Logger.logPostStoreError(getClass().getSimpleName(), t);
-        notifyError(t);
+    private void postChange(String type) {
+        Logger.logPostStoreChange(getClass().getSimpleName(), type);
+        notifyChange(this, type);
     }
 
-    public static class StoreChangeEvent {}
+    private void postError(String type) {
+        Logger.logPostStoreError(getClass().getSimpleName(), type);
+        notifyError(this, type);
+    }
 }

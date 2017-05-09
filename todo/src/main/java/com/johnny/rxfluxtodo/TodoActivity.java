@@ -41,7 +41,7 @@ import android.widget.EditText;
  *
  * Created on 2017/3/28
  */
-public class TodoActivity extends AppCompatActivity implements StoreObserver<Store.StoreChangeEvent>{
+public class TodoActivity extends AppCompatActivity implements StoreObserver{
 
     private EditText vMainEdit;
     private ViewGroup vMainGroup;
@@ -167,12 +167,12 @@ public class TodoActivity extends AppCompatActivity implements StoreObserver<Sto
     }
 
     @Override
-    public void onChange(Store.StoreChangeEvent event) {
+    public void onChange(Store store, String actionType) {
         updateUI();
     }
 
     @Override
-    public void onError(Store.StoreChangeEvent event) {
+    public void onError(Store store, String actionType) {
 
     }
 }

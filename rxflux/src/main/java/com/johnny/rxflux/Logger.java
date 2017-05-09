@@ -26,7 +26,7 @@ import java.util.Arrays;
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.0
  */
-public class Logger {
+class Logger {
 
     private static final String TAG = "RxFlux";
 
@@ -76,15 +76,15 @@ public class Logger {
         }
     }
 
-    static void logPostStoreChange(@NonNull String storeName, @NonNull Store.StoreChangeEvent event) {
+    static void logPostStoreChange(@NonNull String storeName, @NonNull String actionType) {
         if(logEnabled) {
-            Log.d(TAG, "Store " + storeName + " post change " + event.getClass().getSimpleName());
+            Log.d(TAG, "Store " + storeName + " post change " + actionType);
         }
     }
 
-    static void logPostStoreError(@NonNull String storeName, @NonNull Store.StoreChangeEvent event) {
+    static void logPostStoreError(@NonNull String storeName, @NonNull String actionType) {
         if(logEnabled) {
-            Log.d(TAG, "Store " + storeName + " post error " + event.getClass().getSimpleName());
+            Log.d(TAG, "Store " + storeName + " post error " + actionType);
         }
     }
 

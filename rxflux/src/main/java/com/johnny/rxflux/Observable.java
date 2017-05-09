@@ -1,4 +1,4 @@
-package com.johnny.rxflux.util;
+package com.johnny.rxflux;
 /*
  * Copyright (C) 2017 Johnny Shieh Open Source Project
  *
@@ -16,14 +16,36 @@ package com.johnny.rxflux.util;
  */
 
 /**
+ * description
  *
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.0
  */
-public interface Observer<T> {
+public class Observable {
 
-    void onChange(T t);
+    private StoreObserver mObserver;
 
-    void onError(T t);
+    public void setObserver(StoreObserver observer) {
+        if(null == observer) {
+            throw new NullPointerException();
+        }else {
+            mObserver = observer;
+        }
+    }
 
+    void notifyChange(Store store, String actionType) {
+        if (null != mObserver) {
+            mObserver.onChange(store, actionType);
+        }
+    }
+
+    void notifyError(Store store, String actionType) {
+        if (null != mObserver) {
+            mObserver.onError(store, actionType);
+        }
+    }
+
+    void removeObserver() {
+        mObserver = null;
+    }
 }
