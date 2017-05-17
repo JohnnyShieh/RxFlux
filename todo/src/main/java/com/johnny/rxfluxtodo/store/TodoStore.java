@@ -44,7 +44,7 @@ public class TodoStore extends Store{
     }
 
     @Override
-    public void onAction(Action action) {
+    protected boolean onAction(Action action) {
         long id;
         switch (action.getType()) {
             case ActionType.TODO_CREATE:
@@ -79,11 +79,13 @@ public class TodoStore extends Store{
                 toggleCompleteAll();
                 break;
         }
+        return true;
     }
 
     @Override
-    public void onError(Action action, Throwable throwable) {
+    protected boolean onError(Action action, Throwable throwable) {
 
+        return true;
     }
 
     public List<Todo> getTodoList() {

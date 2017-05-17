@@ -47,20 +47,22 @@ public abstract class Store extends Observable{
         removeObserver();
     }
 
-    public abstract void onAction(Action action);
+    protected abstract boolean onAction(Action action);
 
-    public abstract void onError(Action action, Throwable throwable);
+    protected abstract boolean onError(Action action, Throwable throwable);
 
     void handleAction(Action action) {
         if (action instanceof ErrorAction) {
             Logger.logOnError(getClass().getSimpleName(), action.getType());
             ErrorAction errorAction = (ErrorAction) action;
-            onError(errorAction.getAction(), errorAction.getThrowable());
-            postError(errorAction.getAction().getType());
+            if (onError(errorAction.getAction(), errorAction.getThrowable())) {
+                postError(errorAction.getAction().getType());
+            }
         } else {
             Logger.logOnAction(getClass().getSimpleName(), action);
-            onAction(action);
-            postChange(action.getType());
+            if (onAction(action)) {
+                postChange(action.getType());
+            }
         }
     }
 

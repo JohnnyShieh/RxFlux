@@ -21,7 +21,7 @@ package com.johnny.rxflux;
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.0
  */
-public class Observable {
+class Observable {
 
     private StoreObserver mObserver;
 
