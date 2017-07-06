@@ -28,7 +28,7 @@ public abstract class Store extends Observable{
     private Disposable mDisposable;
 
     public void register(String... actionTypes) {
-        Dispatcher.get().register(this, actionTypes);
+        RxFlux.register(this, actionTypes);
     }
 
     void setDisposable(Disposable disposable) {
@@ -47,8 +47,18 @@ public abstract class Store extends Observable{
         removeObserver();
     }
 
+    /**
+     * handle normal action which has registered
+     * @param action normal action which has registered
+     * @return true, notify observer to update; false, means store has no change, there is no need to update.
+     */
     protected abstract boolean onAction(Action action);
 
+    /**
+     * handle error action which has registered
+     * @param action error action which has registered
+     * @return true, notify observer to update; false, means store has no change, there is no need to update.
+     */
     protected abstract boolean onError(Action action, Throwable throwable);
 
     void handleAction(Action action) {

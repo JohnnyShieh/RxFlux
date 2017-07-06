@@ -16,7 +16,7 @@ package com.johnny.rxfluxtodo.action;
  */
 
 import com.johnny.rxflux.Action;
-import com.johnny.rxflux.Dispatcher;
+import com.johnny.rxflux.RxFlux;
 import com.johnny.rxfluxtodo.model.Todo;
 
 /**
@@ -33,18 +33,18 @@ public class TodoActionCreator {
         Action action = Action.type(ActionType.TODO_CREATE)
             .bundle(ActionKey.KEY_TEXT, text)
             .build();
-        Dispatcher.get().postAction(action);
+        RxFlux.postAction(action);
     }
 
     public void destroy(long id) {
         Action action = Action.type(ActionType.TODO_DESTROY)
             .bundle(ActionKey.KEY_ID, id)
             .build();
-        Dispatcher.get().postAction(action);
+        RxFlux.postAction(action);
     }
 
     public void undoDestroy() {
-        Dispatcher.get().postAction(Action.type(ActionType.TODO_UNDO_DESTROY).build());
+        RxFlux.postAction(Action.type(ActionType.TODO_UNDO_DESTROY).build());
     }
 
     public void toggleComplete(Todo todo) {
@@ -53,15 +53,15 @@ public class TodoActionCreator {
         Action action = Action.type(actionType)
             .bundle(ActionKey.KEY_ID, id)
             .build();
-        Dispatcher.get().postAction(action);
+        RxFlux.postAction(action);
     }
 
     public void toggleCompleteAll() {
-        Dispatcher.get().postAction(Action.type(ActionType.TODO_TOGGLE_COMPLETE_ALL).build());
+        RxFlux.postAction(Action.type(ActionType.TODO_TOGGLE_COMPLETE_ALL).build());
     }
 
     public void destroyCompleted() {
-        Dispatcher.get().postAction(Action.type(ActionType.TODO_DESTROY_COMPLETED).build());
+        RxFlux.postAction(Action.type(ActionType.TODO_DESTROY_COMPLETED).build());
     }
 
 }

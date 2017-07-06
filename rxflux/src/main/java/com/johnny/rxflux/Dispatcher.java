@@ -28,19 +28,15 @@ import io.reactivex.functions.Predicate;
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.0
  */
-public class Dispatcher {
+public class Dispatcher implements IDispatcher {
 
     private final RxBus bus;
 
-    private Dispatcher() {
+    public Dispatcher() {
         this.bus = RxBus.get();
     }
 
-    public static Dispatcher get() {
-        return Holder.DISPATCHER;
-    }
-
-    void register(@NonNull final Store store, final String... actionTypes) {
+    public void register(@NonNull final Store store, final String... actionTypes) {
         Logger.logRegisterStore(store.getClass().getSimpleName(), actionTypes);
         store.setDisposable(bus.toObservable(Action.class)
             .filter(new Predicate<Action>() {
@@ -83,8 +79,4 @@ public class Dispatcher {
         bus.post(ErrorAction.newErrorAction(action, throwable));
     }
 
-    private static class Holder {
-
-        private static final Dispatcher DISPATCHER = new Dispatcher();
-    }
 }

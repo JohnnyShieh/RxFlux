@@ -41,7 +41,7 @@ import android.widget.EditText;
  *
  * Created on 2017/3/28
  */
-public class TodoActivity extends AppCompatActivity implements StoreObserver{
+public class TodoActivity extends AppCompatActivity {
 
     private EditText vMainEdit;
     private ViewGroup vMainGroup;
@@ -118,7 +118,16 @@ public class TodoActivity extends AppCompatActivity implements StoreObserver{
     @Override
     protected void onResume() {
         super.onResume();
-        mTodoStore.setObserver(this);
+        mTodoStore.setObserver(new StoreObserver() {
+            @Override
+            public void onChange(Store store, String actionType) {
+                updateUI();
+            }
+
+            @Override
+            public void onError(Store store, String actionType) {
+            }
+        });
         mTodoStore.register(ActionType.TODO_COMPLETE,
             ActionType.TODO_CREATE,
             ActionType.TODO_DESTROY,
@@ -164,15 +173,5 @@ public class TodoActivity extends AppCompatActivity implements StoreObserver{
 
     private String getInputText() {
         return vMainEdit.getText().toString();
-    }
-
-    @Override
-    public void onChange(Store store, String actionType) {
-        updateUI();
-    }
-
-    @Override
-    public void onError(Store store, String actionType) {
-
     }
 }
