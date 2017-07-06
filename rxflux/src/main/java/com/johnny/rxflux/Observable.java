@@ -33,15 +33,15 @@ class Observable {
         }
     }
 
-    void notifyChange(Store store, String actionType) {
+    void notifyChange(String actionType) {
         if (null != mObserver) {
-            mObserver.onChange(store, actionType);
+            mObserver.onChange(actionType);
         }
     }
 
-    void notifyError(Store store, String actionType) {
+    void notifyError(String actionType) {
         if (null != mObserver) {
-            mObserver.onError(store, actionType);
+            mObserver.onError(actionType);
         }
     }
 

@@ -31,6 +31,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.6'
     testCompile 'junit:junit:4.12'
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
 }
 
 // 项目主页
@@ -42,7 +43,7 @@ def libName = "RxFlux"
 //发布到组织名称名字，必须填写
 group = "com.johnny.rxflux"
 // 版本号，下次更新是只需要更改版本号即可
-version = "1.1.0"
+version = "1.1.1"
 //上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.1.0'
 //生成源文件
 task sourcesJar(type: Jar) {

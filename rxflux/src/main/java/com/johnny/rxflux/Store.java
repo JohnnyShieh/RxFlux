@@ -15,6 +15,8 @@ package com.johnny.rxflux;
  * limitations under the License.
  */
 
+import javax.annotation.Nonnull;
+
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -52,14 +54,14 @@ public abstract class Store extends Observable{
      * @param action normal action which has registered
      * @return true, notify observer to update; false, means store has no change, there is no need to update.
      */
-    protected abstract boolean onAction(Action action);
+    protected abstract boolean onAction(@Nonnull Action action);
 
     /**
      * handle error action which has registered
      * @param action error action which has registered
      * @return true, notify observer to update; false, means store has no change, there is no need to update.
      */
-    protected abstract boolean onError(Action action, Throwable throwable);
+    protected abstract boolean onError(@Nonnull Action action, Throwable throwable);
 
     void handleAction(Action action) {
         if (action instanceof ErrorAction) {
@@ -78,11 +80,11 @@ public abstract class Store extends Observable{
 
     private void postChange(String type) {
         Logger.logPostStoreChange(getClass().getSimpleName(), type);
-        notifyChange(this, type);
+        notifyChange(type);
     }
 
     private void postError(String type) {
         Logger.logPostStoreError(getClass().getSimpleName(), type);
-        notifyError(this, type);
+        notifyError(type);
     }
 }

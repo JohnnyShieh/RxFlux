@@ -15,6 +15,8 @@ package com.johnny.rxflux;
  * limitations under the License.
  */
 
+import javax.annotation.Nonnull;
+
 /**
  * A interface which view should implement
  *
@@ -23,9 +25,9 @@ package com.johnny.rxflux;
  */
 public interface StoreObserver {
 
-    void onChange(Store store, String actionType);
+    void onChange(@Nonnull String actionType);
 
-    void onError(Store store, String actionType);
+    void onError(@Nonnull String actionType);
 
 }
 

@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 /**
  * description
  *
@@ -44,7 +46,7 @@ public class TodoStore extends Store{
     }
 
     @Override
-    protected boolean onAction(Action action) {
+    protected boolean onAction(@Nonnull Action action) {
         long id;
         switch (action.getType()) {
             case ActionType.TODO_CREATE:
@@ -83,7 +85,7 @@ public class TodoStore extends Store{
     }
 
     @Override
-    protected boolean onError(Action action, Throwable throwable) {
+    protected boolean onError(@Nonnull Action action, Throwable throwable) {
 
         return true;
     }

@@ -33,6 +33,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import javax.annotation.Nonnull;
+
 /**
  * description
  *
@@ -120,12 +122,12 @@ public class TodoActivity extends AppCompatActivity {
         super.onResume();
         mTodoStore.setObserver(new StoreObserver() {
             @Override
-            public void onChange(Store store, String actionType) {
+            public void onChange(@Nonnull String actionType) {
                 updateUI();
             }
 
             @Override
-            public void onError(Store store, String actionType) {
+            public void onError(@Nonnull String actionType) {
             }
         });
         mTodoStore.register(ActionType.TODO_COMPLETE,
