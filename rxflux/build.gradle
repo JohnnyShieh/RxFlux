@@ -1,16 +1,17 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 25
-        versionCode 3
-        versionName "1.0.2"
+        minSdkVersion 17
+        targetSdkVersion 26
+        versionCode 5
+        versionName "1.2.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -24,14 +25,23 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+
+    // Architecture component
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'android.arch.lifecycle:common-java8:1.1.1'
+
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+
+
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.6'
-    testCompile 'junit:junit:4.12'
-    compile 'com.google.code.findbugs:jsr305:2.0.1'
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.google.code.findbugs:jsr305:2.0.1'
 }
 
 // 项目主页
@@ -43,8 +53,8 @@ def libName = "RxFlux"
 //发布到组织名称名字，必须填写
 group = "com.johnny.rxflux"
 // 版本号，下次更新是只需要更改版本号即可
-version = "1.1.1"
-//上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.1.0'
+version = "1.2.0"
+//上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.2.0'
 //生成源文件
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs

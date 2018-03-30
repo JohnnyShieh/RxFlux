@@ -1,6 +1,5 @@
-package com.johnny.rxflux;
 /*
- * Copyright (C) 2017 Johnny Shieh Open Source Project
+ * Copyright (C) 2018 Johnny Shieh Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +13,21 @@ package com.johnny.rxflux;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.johnny.rxflux
 
-import javax.annotation.Nonnull;
+import android.support.v4.util.ArrayMap
 
 /**
- * A interface which view should implement
+ * Object class that hold the type of action and the data we want to attach to it
  *
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.1
+ *
+ * Created on 2018/3/29
  */
-public interface StoreObserver {
-
-    void onChange(@Nonnull String actionType);
-
-    void onError(@Nonnull String actionType);
-
-}
-
+data class Action(
+    val type: String,
+    val data: ArrayMap<String, Any> = ArrayMap(),
+    val isError: Boolean = false,
+    val throwable: Throwable? = null
+)

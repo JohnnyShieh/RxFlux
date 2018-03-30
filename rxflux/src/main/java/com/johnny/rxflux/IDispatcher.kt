@@ -1,4 +1,3 @@
-package com.johnny.rxflux;
 /*
  * Copyright (C) 2017 Johnny Shieh Open Source Project
  *
@@ -14,21 +13,20 @@ package com.johnny.rxflux;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-import io.reactivex.annotations.NonNull;
+package com.johnny.rxflux
 
 /**
- * Flux dispatcher Interface
+ * description
  *
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.0
+ *
  */
-public interface IDispatcher {
+interface IDispatcher {
 
-    void register(@NonNull final Store store, final String... actionTypes);
+    fun register(store: Store, vararg actionTypes: String)
 
-    void postAction(@NonNull final Action action);
+    fun postAction(action: Action)
 
-    void postError(@NonNull final Action action, Throwable throwable);
+    fun postError(action: Action)
 }

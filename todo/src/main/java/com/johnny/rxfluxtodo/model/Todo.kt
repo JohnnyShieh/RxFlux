@@ -1,4 +1,5 @@
-package com.johnny.rxflux;
+package com.johnny.rxfluxtodo.model
+
 /*
  * Copyright (C) 2017 Johnny Shieh Open Source Project
  *
@@ -21,31 +22,33 @@ package com.johnny.rxflux;
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.0
  */
-class Observable {
+class Todo : Cloneable, Comparable<Todo> {
 
-    private StoreObserver mObserver;
+    val id: Long
+    var isComplete: Boolean
+    var text: String
 
-    public void setObserver(StoreObserver observer) {
-        if(null == observer) {
-            throw new NullPointerException();
-        }else {
-            mObserver = observer;
-        }
+    constructor(id: Long, text: String) {
+        this.id = id
+        this.text = text
+        this.isComplete = false
     }
 
-    void notifyChange(String actionType) {
-        if (null != mObserver) {
-            mObserver.onChange(actionType);
-        }
+    constructor(id: Long, text: String, complete: Boolean) {
+        this.id = id
+        this.text = text
+        this.isComplete = complete
     }
 
-    void notifyError(String actionType) {
-        if (null != mObserver) {
-            mObserver.onError(actionType);
-        }
+    public override fun clone(): Todo {
+        return Todo(id, text, isComplete)
     }
 
-    void removeObserver() {
-        mObserver = null;
+    override fun compareTo(other: Todo): Int {
+        return when {
+            id == other.id -> 0
+            id < other.id -> -1
+            else -> 1
+        }
     }
 }

@@ -1,4 +1,3 @@
-package com.johnny.rxfluxtodo.action;
 /*
  * Copyright (C) 2017 Johnny Shieh Open Source Project
  *
@@ -14,19 +13,26 @@ package com.johnny.rxfluxtodo.action;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.johnny.rxflux
+
+import io.reactivex.subjects.PublishSubject
 
 /**
- * description
+ * Rx2 versoion of EventBus
  *
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
- * @version 1.0
+ * @version 1.1
  *
- * Created on 2017/3/28
  */
-public interface ActionKey {
+class RxBus {
 
-    String KEY_TEXT = "key-text";
-    String KEY_ID = "key-id";
+    private val bus = PublishSubject.create<Any>().toSerialized()
 
+    fun post(any: Any) = bus.onNext(any)
+
+    fun <T> toObservable(type: Class<T>) = bus.ofType(type)
+
+    fun toObservable() = bus
+
+    fun hasObservers() = bus.hasObservers()
 }
-
