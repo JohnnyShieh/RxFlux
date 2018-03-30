@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.dokka'
 
 android {
     compileSdkVersion 26
@@ -61,14 +62,16 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 //生成Javadoc文档
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+task javadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
+    sourceDirs = android.sourceSets.main.java.srcDirs
+    noStdlibLink = true
 }
 //文档打包成jar
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
-    from javadoc.destinationDir
+    from javadoc.outputDirectory
 }
 //拷贝javadoc文件
 task copyDoc(type: Copy) {
@@ -130,15 +133,5 @@ bintray {
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         publish = true
-    }
-}
-javadoc {
-    options{
-        //如果你的项目里面有中文注释的话，必须将格式设置为UTF-8，不然会出现乱码
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        author true
-        version true
-        links "http://docs.oracle.com/javase/7/docs/api"
     }
 }
