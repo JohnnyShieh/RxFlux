@@ -9,10 +9,10 @@ android {
     buildToolsVersion "26.0.2"
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 15
         targetSdkVersion 26
-        versionCode 5
-        versionName "1.2.0"
+        versionCode 6
+        versionName "1.2.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -26,23 +26,14 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation "org.jetbrains.anko:anko-commons:$anko_version"
-
     // Architecture component
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'android.arch.lifecycle:common-java8:1.1.1'
-
-    implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
-
-
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     testImplementation 'junit:junit:4.12'
-    implementation 'com.google.code.findbugs:jsr305:2.0.1'
+    implementation 'com.android.support:support-v4:26.1.0'
 }
 
 // 项目主页
@@ -54,8 +45,8 @@ def libName = "RxFlux"
 //发布到组织名称名字，必须填写
 group = "com.johnny.rxflux"
 // 版本号，下次更新是只需要更改版本号即可
-version = "1.2.0"
-//上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.2.0'
+version = "1.2.1"
+//上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.2.1'
 //生成源文件
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs

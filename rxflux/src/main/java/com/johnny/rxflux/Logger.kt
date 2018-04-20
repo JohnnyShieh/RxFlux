@@ -15,8 +15,7 @@
  */
 package com.johnny.rxflux
 
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
+import android.util.Log
 
 /**
  * The Logger to track flux flow
@@ -27,52 +26,52 @@ import org.jetbrains.anko.debug
  */
 object Logger {
 
-    private val log = AnkoLogger("RxFlux")
+    private const val TAG = "RxFlux"
     var logEnabled = true
 
     fun logRegisterStore(storeName: String, vararg actionType: String) {
         if (logEnabled) {
             if (actionType.isEmpty()) {
-                log.debug("Store $storeName has registered all action")
+                Log.d(TAG, "Store $storeName has registered all action")
             } else {
-                log.debug("Store $storeName has registered action : $actionType")
+                Log.d(TAG, "Store $storeName has registered action : $actionType")
             }
         }
     }
 
     fun logUnregisterStore(storeName: String) {
         if (logEnabled) {
-            log.debug("Store $storeName has unregistered")
+            Log.d(TAG, "Store $storeName has unregistered")
         }
     }
 
     fun logPostAction(action: Action) {
         if (logEnabled) {
-            log.debug("Dispatcher post action : $action")
+            Log.d(TAG, "Dispatcher post action : $action")
         }
     }
 
     fun logPostError(action: Action) {
         if (logEnabled) {
-            log.debug("Dispatcher post error : $action cause message : ${action.throwable?.message}")
+            Log.d(TAG, "Dispatcher post error : $action cause message : ${action.throwable?.message}")
         }
     }
 
     fun logHandleAction(storeName: String, action: Action) {
         if (logEnabled) {
-            log.debug("Store $storeName onAction $action")
+            Log.d(TAG, "Store $storeName onAction $action")
         }
     }
 
     fun logHandleError(storeName: String, action: Action) {
         if (logEnabled) {
-            log.debug("Store $storeName onError $action")
+            Log.d(TAG, "Store $storeName onError $action")
         }
     }
 
     fun logHandleException(storeName: String, actionType: String, e: Exception) {
         if (logEnabled) {
-            log.debug("Store $storeName handle action $actionType throws Exceptiop", e)
+            Log.d(TAG, "Store $storeName handle action $actionType throws Exceptiop", e)
         }
     }
 }
