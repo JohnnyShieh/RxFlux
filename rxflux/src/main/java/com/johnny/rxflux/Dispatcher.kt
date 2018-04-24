@@ -28,7 +28,7 @@ import android.support.annotation.MainThread
 class Dispatcher private constructor() : IDispatcher {
 
     companion object {
-        internal var instance: IDispatcher = Dispatcher()
+        var instance: IDispatcher = Dispatcher()
     }
 
     private val bus = RxBus()
