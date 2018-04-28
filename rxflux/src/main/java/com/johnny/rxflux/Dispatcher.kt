@@ -79,10 +79,6 @@ class Dispatcher private constructor() : IDispatcher {
     }
 }
 
-fun mockDispatcher(mockObj: IDispatcher) {
-    Dispatcher.instance = mockObj
-}
-
 internal fun register(store: Store, vararg actionTypes: String) = Dispatcher.instance.register(store, *actionTypes)
 
 fun postAction(action: Action) = Dispatcher.instance.postAction(action)

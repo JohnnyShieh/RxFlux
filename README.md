@@ -8,7 +8,7 @@ I have tried MVC, MVP and Clean architecture on Android. But I love the Flux arc
 
 ```
 dependencies {
-  compile 'com.johnny.rxflux:rxflux:1.2.0'
+  compile 'com.johnny.rxflux:rxflux:1.2.3'
 }
 ```
 
