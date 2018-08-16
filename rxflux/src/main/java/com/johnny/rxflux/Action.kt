@@ -27,7 +27,13 @@ import android.support.v4.util.ArrayMap
  */
 data class Action(
     val type: String,
-    val data: ArrayMap<String, Any> = ArrayMap(),
-    val isError: Boolean = false,
     val throwable: Throwable? = null
-)
+) {
+    // the flag indicate the action is normal action or error action
+    var isError: Boolean = false
+
+    // the target store to receive the action
+    var target: Store? = null
+
+    val data: ArrayMap<String, Any> = ArrayMap()
+}

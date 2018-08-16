@@ -5,14 +5,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'org.jetbrains.dokka'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 26
-        versionCode 8
-        versionName "1.2.3"
+        targetSdkVersion 27
+        versionCode 9
+        versionName "1.2.4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -33,7 +33,7 @@ dependencies {
     implementation 'android.arch.lifecycle:common-java8:1.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.android.support:support-v4:27.1.1'
 }
 
 // 项目主页
@@ -45,8 +45,8 @@ def libName = "RxFlux"
 //发布到组织名称名字，必须填写
 group = "com.johnny.rxflux"
 // 版本号，下次更新是只需要更改版本号即可
-version = "1.2.3"
-//上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.2.3'
+version = "1.2.4"
+//上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.2.4'
 //生成源文件
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs

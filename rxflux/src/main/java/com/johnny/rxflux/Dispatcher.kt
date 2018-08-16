@@ -38,10 +38,15 @@ class Dispatcher private constructor() : IDispatcher {
         Logger.logRegisterStore(store.javaClass.simpleName, *actionTypes)
         store.disposable = bus.toObservable(Action::class.java)
                 .filter { action ->
-                    if (actionTypes.isEmpty()) {
-                        return@filter true
+                    // the target of action has the highest priority
+                    if (action.target != null) {
+                        return@filter action.target == store
+                    } else {
+                        if (actionTypes.isEmpty()) {
+                            return@filter true
+                        }
+                        return@filter actionTypes.any { it == action.type }
                     }
-                    return@filter actionTypes.any { it == action.type }
                 }.subscribe { action ->
                     // catch exception avoid complete subscribe relationship
                     try {
@@ -57,10 +62,7 @@ class Dispatcher private constructor() : IDispatcher {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw IllegalThreadStateException("You must call postAction method on main thread!")
         }
-        if (action.isError) {
-            throw IllegalArgumentException("post Action isError should not be true!")
-        }
-
+        action.isError = false
         Logger.logPostAction(action)
         bus.post(action)
     }
@@ -70,10 +72,7 @@ class Dispatcher private constructor() : IDispatcher {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw IllegalThreadStateException("You must call postAction method on main thread!")
         }
-        if (!action.isError) {
-            throw IllegalArgumentException("post error Action isError should be true!")
-        }
-
+        action.isError = true
         Logger.logPostError(action)
         bus.post(action)
     }
