@@ -123,7 +123,6 @@ Next we should make an action:
 // TaskActionCreator
 
 fun getTasks() {
-    final Action action = Action.type("get_task").build();
     api.getTasks()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
