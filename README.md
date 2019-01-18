@@ -1,6 +1,6 @@
 # Flux Architecture on Android
 
-I have tried MVC, MVP and Clean architecture on Android. But I love the Flux architecture mostly because of its **undirectional data flow** and **layering** features. However I can't find an approving implementation of Flux arichtecture, so I wirte RxFlux based on skimarxall's [RxFlux](https://github.com/skimarxall/RxFlux).
+I have tried MVC, MVP and Clean architecture on Android. But mostly I love the Flux architecture because of its **undirectional data flow** and **layering** features. However I can't find an approving implementation of Flux arichtecture, so I wirte RxFlux based on skimarxall's [RxFlux](https://github.com/skimarxall/RxFlux).
 
 ## Getting started
 
@@ -8,7 +8,7 @@ I have tried MVC, MVP and Clean architecture on Android. But I love the Flux arc
 
 ```
 dependencies {
-  compile 'com.johnny.rxflux:rxflux:1.2.3'
+  implementation 'com.johnny.rxflux:rxflux:1.2.6'
 }
 ```
 
@@ -41,23 +41,30 @@ Two of this elements are very easy to figure out and implement.
 
 - **View**: Activity or Fragment
 - **Dispatcher**: An event bus. I use RxBus in my implementation.
+- **Store**: An ViewModel, which is introduced in Architecture Compoment.
 
 ### Actions
 
-Actinos are not complex either. They will be implemented as simple POJOs with two main attributes:
+Actions are not complex either. They will be implemented as simple POJOs with two main attributes:
 
 - Type: a `String` identifying the type of action.
-- Data: a `ArrayMap` with the payload for action.
+- Data: a Single `Object` or a `ArrayMap` with the payload for action.
+
+And the Actions divide into normal action and error action, it is all depending on the method you use. If use `postAction`, it is a normal action, use `postError`, then it is a error action.
 
 For example, a action to create todo will like this:
 
-```java
-Action action = Action.type("todo_create")
-    .bundle("key_text"", text)
-    .build();
-```
+```kotlin
+val createAction = Action("todo_create").apply { singleData = text }
+val updateAction = Action("todo_update").apply {
+    data["key_id"] = id
+    data["key_text"] = text
+}
 
-There has another class `ErrorAction` which I think need to pay attention. For example, when we make a asynchronous network call Action, if there happens some exception we need send the Action and error info to Store. And it's what ErrorAction contains.
+// or just use postAction or postError method, which combine building action and post action to Dispatcher
+postAction("todo_create", text)
+postAction("todo_update", "key_id" to id, "key_text" to text)
+```
 
 ### Store
 
@@ -65,9 +72,9 @@ This is perhaps the **most difficult** to get Flux concept.
 
 Stores contain the **status of the application and its business logic**. They are similar to _rich data models_ but they can manage the status of **various objects**, not just one.
 
-Stores **react to Actions emitted by the Dispatcher**, execute business logic and emit a change event as result.
+Stores **react to Actions emitted by the Dispatcher**, execute business logic and emit a change event as result. It just like the `ViewModel` in Google Architectur Component, so I just let Store extends ViewModel. When the activity of fragment is destorying, the attched Store will auto unregister from Dispatcher.
 
-Stores only output is this single event: _change_. View(flux component) interested in a Store internal status must listen to this event and use it to get the data it needs.
+Stores only output is this single event: _change_. View(flux component) interested in a Store internal status must listen to this event and use it to get the data it needs. I recommend the `LiveData` in Google Architectur Component to update the UI.
 
 No other component of the system should need to know anything about the status of the application.
 
@@ -75,7 +82,7 @@ Finally, stores must **expose an interface** to obtain application Status. This 
 
 ![](https://github.com/JohnnyShieh/RxFlux/blob/master/images/flux-store.png)
 
-In my implementation, a Store object can only be listened to one View, but one View can listen to multiple Store object. The reason is Store maintains the part state of a View, so if another View interested the same Store, it can listen to another instance of the same Store.
+And a Store object can only be listened to one View, but one View can listen to multiple Store object.
 
 ### Network requests and asynchronous calls
 
@@ -103,101 +110,78 @@ Imagine a scenario where you pull tasks from network and show them, if you pull 
 
 Firstly we need a network call(usually Retrofit).
 
-```java
+```kotlin
 // Api
 
 @GET(Api.GET_TASKS)
-Single<List<Task>> getTasks();
+fun getTasks(): Single<List<Task>>
 ```
 
 Next we should make an action:
 
-```java
+```kotlin
 // TaskActionCreator
 
-public void getTasks() {
+fun getTasks() {
     final Action action = Action.type("get_task").build();
     api.getTasks()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Consumer<List<Task>>() {
-            @Override
-            public void accept(@NonNull List<Task> tasks) throws Exception {
-                action.getData().put("key_tasks", tasks);
-                Dispatcher.get().postAction(action);
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception {
-                hasAction = false;
-                Dispatcher.get().postError(action, throwable);
-            }
-        });
+        .subscribe(
+            { postAction("get_task", it) },
+            { postError("get_task", it) }
+        )
 }
 ```
 
 Then we handle store:
 
-```java
+```kotlin
 // TasksStore
 
-public class TasksStore extends Store<Store.StoreChangeEvent> {
+class TasksStore : Store() {
+
+    val errorMsg = MutableLiveData<String>()
+    val taskList = MutableLiveData<List<Task>>()
+
+    override fun onAction(action: Action) {
+        when (action.type) {
+            "get_task" -> taskList.value = action.singleData
+        }
+    }
+
+    override fun onError(action: Action) {
+        errorMsg.value = action.throwable?.message
+    }
+
     private List<Task> mTasks;
     private String mErrorMsg;
-
-    @Override
-    public void onAction(Action action) {
-        mErrorMsg = null;
-        mTasks = action.get("key_tasks");
-        postChange(new Store.StoreChangeEvent());
-    }
-
-    @Override
-    public void onError(Action action, Throwable throwable) {
-        mErrorMsg = "request failed!"; // exactly we should set msg due to throwable
-        postError(new Store.StoreChangeEvent());
-    }
-
-    public List<Task> getTasks() {
-        return mTasks;
-    }
-
-    public String getErrorMsg() {
-        return mErrorMsg;
-    }
 }
 ```
 
 Finally we should handle activity:
 
-```java
-// TaskActivity implements StoreObserver<Store.StoreChangeEvent>
+```kotlin
+// TodoActivity
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+    mStore = ViewModelProviders.of(this).get(TasksStore::class.java)
+    // store register get_tasks action
+    mStore.register("get_tasks")
 
-    mStore = new TaskStore();
-    mStore.setObserver(this);
-    Dispatcher.get().register(mStore, "get_tasks"); // store register get_tasks action
+    initDataObserver()
     ...
 }
 
-@Override
-protected void onDestroy() {
-    super.onDestroy();
-    mTodoStore.unRegister();
-}
-
-@Override
-public void onChange(Store.StoreChangeEvent event) {
-    // update ui
-}
-
-@Override
-public void onError(Store.StoreChangeEvent event) {
-    // show error msg
+private fun initDataObserver() {
+    mStore.errorMsg.observe(this, Observer {
+        // show error Msg or other
+    })
+    mStore.taskList.observe(this, Observer {
+        // update task ui
+    })
 }
 ```
 

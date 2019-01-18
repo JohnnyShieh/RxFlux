@@ -19,7 +19,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import com.johnny.rxflux.Action
 import com.johnny.rxflux.Store
-import com.johnny.rxfluxtodo.action.ActionKey
 import com.johnny.rxfluxtodo.action.ActionType
 import com.johnny.rxfluxtodo.model.Todo
 
@@ -39,15 +38,15 @@ class TodoStore : Store() {
 
     val todoList = MutableLiveData<List<Todo>>().apply { value = list }
 
-    val canUndo = Transformations.map(lastDeleted, { lastDeleted -> lastDeleted != null })
+    val canUndo = Transformations.map(lastDeleted) { lastDeleted -> lastDeleted != null }
 
     override fun onAction(action: Action) {
         when (action.type) {
-            ActionType.TODO_CREATE -> create(action.data[ActionKey.KEY_TEXT] as String)
-            ActionType.TODO_DESTROY -> destroy(action.data[ActionKey.KEY_ID] as Long)
+            ActionType.TODO_CREATE -> create(action.singleData as String)
+            ActionType.TODO_DESTROY -> destroy(action.singleData as Long)
             ActionType.TODO_UNDO_DESTROY -> undoDestroy()
-            ActionType.TODO_COMPLETE -> updateComplete(action.data[ActionKey.KEY_ID] as Long, true)
-            ActionType.TODO_UNDO_COMPLETE -> updateComplete(action.data[ActionKey.KEY_ID] as Long, false)
+            ActionType.TODO_COMPLETE -> updateComplete(action.singleData as Long, true)
+            ActionType.TODO_UNDO_COMPLETE -> updateComplete(action.singleData as Long, false)
             ActionType.TODO_DESTROY_COMPLETED -> destroyCompleted()
             ActionType.TODO_TOGGLE_COMPLETE_ALL -> toggleCompleteAll()
         }

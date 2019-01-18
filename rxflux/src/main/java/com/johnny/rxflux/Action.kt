@@ -29,11 +29,22 @@ data class Action(
     val type: String,
     val throwable: Throwable? = null
 ) {
-    // the flag indicate the action is normal action or error action
-    var isError: Boolean = false
+    internal var isError = false
 
-    // the target store to receive the action
+    /**
+     * The target store to receive the action, like [android.os.Message.getTarget]
+     */
     var target: Store? = null
 
-    val data: ArrayMap<String, Any> = ArrayMap()
+    /**
+     * Just like [android.view.View] setTag(), getTag()
+     */
+    var singleData: Any? = null
+    /**
+     * Just like [android.view.View] setTag(key, value), getTag(key)
+     */
+    val data: ArrayMap<String, Any> by lazy { ArrayMap<String, Any>() }
+
+    override fun toString() = "Action(type='$type', throwable=$throwable, singleData=$singleData, data=$data)"
+
 }

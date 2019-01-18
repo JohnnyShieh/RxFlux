@@ -97,9 +97,7 @@ class TodoActivity : AppCompatActivity() {
         mAdapter = TodoRecyclerAdapter(mActionCreator)
         mainList.adapter = mAdapter
 
-        mTodoStore.todoList.observe(
-            this,
-            Observer { mAdapter.setItems(mTodoStore.todoList.value!!) })
+        mTodoStore.todoList.observe(this, Observer { mAdapter.setItems(mTodoStore.todoList.value!!) })
         mTodoStore.canUndo.observe(this, Observer { canUndo ->
             if (canUndo == true) {
                 val snackbar = Snackbar.make(vMainGroup, "Element deleted", Snackbar.LENGTH_LONG)

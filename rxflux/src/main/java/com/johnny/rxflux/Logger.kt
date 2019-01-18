@@ -27,7 +27,7 @@ import android.util.Log
 object Logger {
 
     private const val TAG = "RxFlux"
-    var logEnabled = true
+    var logEnabled = BuildConfig.DEBUG
 
     fun logRegisterStore(storeName: String, vararg actionType: String) {
         if (logEnabled) {
@@ -71,7 +71,7 @@ object Logger {
 
     fun logHandleException(storeName: String, actionType: String, e: Exception) {
         if (logEnabled) {
-            Log.d(TAG, "Store $storeName handle action $actionType throws Exceptiop", e)
+            Log.e(TAG, "Store $storeName handle action $actionType throws Exceptiop", e)
         }
     }
 }

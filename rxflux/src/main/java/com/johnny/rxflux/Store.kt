@@ -46,8 +46,8 @@ abstract class Store : ViewModel() {
     protected abstract fun onAction(action: Action)
 
     /**
-     * handle isError action which has registered
-     * @param action isError action which has registered
+     * handle error action which has registered
+     * @param action error action which has registered
      */
     protected abstract fun onError(action: Action)
 
