@@ -16,7 +16,7 @@
 package com.johnny.rxflux
 
 import android.os.Looper
-import android.support.annotation.MainThread
+import androidx.annotation.MainThread
 
 /**
  * Flux dispatcher, contains a rxbus used to send action to store

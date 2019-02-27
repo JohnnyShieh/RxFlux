@@ -15,7 +15,7 @@
  */
 package com.johnny.rxflux
 
-import android.support.v4.util.ArrayMap
+import androidx.collection.ArrayMap
 
 /**
  * Object class that hold the type of action and the data we want to attach to it
