@@ -8,7 +8,11 @@ I have tried MVC, MVP and Clean architecture on Android. But mostly I love the F
 
 ```
 dependencies {
-  implementation 'com.johnny.rxflux:rxflux:1.2.7'
+  // for old support package
+  implementation 'com.johnny.rxflux:rxflux:1.2.6'
+
+  // for androidx
+  implementation 'com.johnny.rxflux:rxflux-androidx:1.2.7'
 }
 ```
 
