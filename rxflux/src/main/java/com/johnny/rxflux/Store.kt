@@ -15,6 +15,7 @@
  */
 package com.johnny.rxflux
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.Disposable
 
@@ -58,16 +59,22 @@ abstract class Store : ViewModel() {
     fun register(vararg actionType: String) = register(this, *actionType)
 
     fun unRegister() {
-        Logger.logUnregisterStore(javaClass.simpleName)
+        if (BuildConfig.DEBUG) {
+            Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} has unregistered")
+        }
         disposable = null
     }
 
     internal fun handleAction(action: Action) {
         if (action.isError) {
-            Logger.logHandleError(javaClass.simpleName, action)
+            if (BuildConfig.DEBUG) {
+                Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onError $action")
+            }
             onError(action)
         } else {
-            Logger.logHandleAction(javaClass.simpleName, action)
+            if (BuildConfig.DEBUG) {
+                Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onAction $action")
+            }
             onAction(action)
         }
     }

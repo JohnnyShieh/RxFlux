@@ -41,7 +41,7 @@ def libName = "RxFlux"
 group = "com.johnny.rxflux"
 // 版本号，下次更新是只需要更改版本号即可
 version = "1.2.7"
-//上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.2.6'
+//上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.2.7'
 //生成源文件
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
