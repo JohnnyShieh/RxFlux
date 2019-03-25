@@ -17,7 +17,7 @@ package com.johnny.rxflux
 
 import android.os.Looper
 import android.util.Log
-import androidx.annotation.MainThread
+import android.support.annotation.MainThread
 
 /**
  * Flux dispatcher, contains a rxbus used to send action to store
@@ -37,12 +37,10 @@ class Dispatcher private constructor() : IDispatcher {
 
     @MainThread
     override fun register(store: Store, vararg actionTypes: String) {
-        if (BuildConfig.DEBUG) {
-            if (actionTypes.isEmpty()) {
-                Log.d(TAG, "Store ${store.javaClass.simpleName} has registered all action")
-            } else {
-                Log.d(TAG, "Store ${store.javaClass.simpleName} has registered action : $actionTypes")
-            }
+        if (actionTypes.isEmpty()) {
+            Log.d(TAG, "Store ${store.javaClass.simpleName} has registered all action")
+        } else {
+            Log.d(TAG, "Store ${store.javaClass.simpleName} has registered action : $actionTypes")
         }
         store.disposable = bus.toObservable(Action::class.java)
                 .filter { action ->
@@ -71,9 +69,7 @@ class Dispatcher private constructor() : IDispatcher {
             throw IllegalThreadStateException("You must call postAction() method on main thread!")
         }
         action.isError = false
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Dispatcher post action : $action")
-        }
+        Log.d(TAG, "Dispatcher post action : $action")
         bus.post(action)
     }
 
@@ -83,14 +79,10 @@ class Dispatcher private constructor() : IDispatcher {
             throw IllegalThreadStateException("You must call postError() method on main thread!")
         }
         action.isError = true
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Dispatcher post error : $action")
-        }
+        Log.d(TAG, "Dispatcher post error : $action")
         bus.post(action)
     }
 }
-
-internal fun register(store: Store, vararg actionTypes: String) = Dispatcher.instance.register(store, *actionTypes)
 
 fun postError(type: String, throwable: Throwable? = null, singleObj: Any? = null, store: Store? = null) = Dispatcher.instance.postError(Action(type, throwable).apply {
     singleData = singleObj

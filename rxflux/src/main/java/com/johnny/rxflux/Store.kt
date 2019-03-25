@@ -16,8 +16,9 @@
 package com.johnny.rxflux
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModel
 import io.reactivex.disposables.Disposable
+import java.lang.Exception
 
 /**
  * Flux store
@@ -56,26 +57,31 @@ abstract class Store : ViewModel() {
         unRegister()
     }
 
-    fun register(vararg actionType: String) = register(this, *actionType)
+    fun register(vararg actionType: String) = Dispatcher.instance.register(this, *actionType)
 
     fun unRegister() {
-        if (BuildConfig.DEBUG) {
-            Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} has unregistered")
-        }
+        Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} has unregistered")
         disposable = null
     }
 
     internal fun handleAction(action: Action) {
         if (action.isError) {
-            if (BuildConfig.DEBUG) {
-                Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onError $action")
-            }
+            Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onError $action")
             onError(action)
         } else {
-            if (BuildConfig.DEBUG) {
+            try {
                 Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onAction $action")
+                onAction(action)
+            } catch (e: Exception) {
+                val errorAction = Action(action.type, e).apply {
+                    isError = true
+                    target = action.target
+                    singleData = action.singleData
+                    data.putAll(action.data.toList())
+                }
+                Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onError after onAction $errorAction")
+                onError(errorAction)
             }
-            onAction(action)
         }
     }
 }

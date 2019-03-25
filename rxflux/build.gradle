@@ -12,12 +12,13 @@ android {
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 11
-        versionName "1.2.7"
+        versionName "1.2.8"
 
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            consumerProguardFiles 'proguard-rules.pro'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -26,9 +27,9 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
+    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
 }
 
 // 项目主页
@@ -40,8 +41,8 @@ def libName = "RxFlux"
 //发布到组织名称名字，必须填写
 group = "com.johnny.rxflux"
 // 版本号，下次更新是只需要更改版本号即可
-version = "1.2.7"
-//上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.2.7'
+version = "1.2.8"
+//上面配置后上传至JCenter后的编译路径是这样的： compile 'com.johnny.rxflux:rxflux:1.2.8'
 //生成源文件
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs

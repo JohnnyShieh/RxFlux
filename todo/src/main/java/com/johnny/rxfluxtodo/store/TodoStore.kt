@@ -15,8 +15,8 @@
  */
 package com.johnny.rxfluxtodo.store
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import com.johnny.rxflux.Action
 import com.johnny.rxflux.Store
 import com.johnny.rxfluxtodo.action.ActionType

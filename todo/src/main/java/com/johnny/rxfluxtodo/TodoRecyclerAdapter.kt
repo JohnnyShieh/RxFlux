@@ -19,7 +19,7 @@ package com.johnny.rxfluxtodo
 import com.johnny.rxfluxtodo.action.TodoActionCreator
 import com.johnny.rxfluxtodo.model.Todo
 
-import androidx.recyclerview.widget.RecyclerView
+import android.support.v7.widget.RecyclerView
 import android.text.SpannableString
 import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
@@ -61,7 +61,7 @@ class TodoRecyclerAdapter(private val mActionCreator: TodoActionCreator) :
         notifyDataSetChanged()
     }
 
-    class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
+    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var todoText: TextView = v.findViewById(R.id.row_text)
         var todoCheck: CheckBox = v.findViewById(R.id.row_checkbox)
         var todoDelete: Button = v.findViewById(R.id.row_delete)

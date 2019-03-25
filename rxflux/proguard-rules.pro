@@ -15,3 +15,4 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keepnames class * extends com.johnny.rxflux.Store
