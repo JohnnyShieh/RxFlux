@@ -37,7 +37,7 @@ class Dispatcher private constructor() : IDispatcher {
 
     @MainThread
     override fun register(store: Store, vararg actionTypes: String) {
-        if (BuildConfig.DEBUG) {
+        if (enableLog) {
             if (actionTypes.isEmpty()) {
                 Log.d(TAG, "Store ${store.javaClass.simpleName} has registered all action")
             } else {
@@ -71,7 +71,7 @@ class Dispatcher private constructor() : IDispatcher {
             throw IllegalThreadStateException("You must call postAction() method on main thread!")
         }
         action.isError = false
-        if (BuildConfig.DEBUG) {
+        if (enableLog) {
             Log.d(TAG, "Dispatcher post action : $action")
         }
         bus.post(action)
@@ -83,40 +83,9 @@ class Dispatcher private constructor() : IDispatcher {
             throw IllegalThreadStateException("You must call postError() method on main thread!")
         }
         action.isError = true
-        if (BuildConfig.DEBUG) {
+        if (enableLog) {
             Log.d(TAG, "Dispatcher post error : $action")
         }
         bus.post(action)
     }
 }
-
-internal fun register(store: Store, vararg actionTypes: String) = Dispatcher.instance.register(store, *actionTypes)
-
-fun postError(type: String, throwable: Throwable? = null, singleObj: Any? = null, store: Store? = null) = Dispatcher.instance.postError(Action(type, throwable).apply {
-    singleData = singleObj
-    target = store
-})
-
-fun postError(type: String, throwable: Throwable? = null, vararg params: Pair<String, Any>, store: Store? = null) {
-    val action = Action(type, throwable)
-    params.forEach {
-        action.data[it.first] = it.second
-    }
-    action.target = store
-    Dispatcher.instance.postError(action)
-}
-
-fun postAction(type: String, singleObj: Any? = null, store: Store? = null) = Dispatcher.instance.postAction(Action(type).apply {
-    singleData = singleObj
-    target = store
-})
-
-fun postAction(type: String, vararg params: Pair<String, Any>, store: Store? = null) {
-    val action = Action(type)
-    params.forEach {
-        action.data[it.first] = it.second
-    }
-    action.target = store
-    Dispatcher.instance.postAction(action)
-}
-

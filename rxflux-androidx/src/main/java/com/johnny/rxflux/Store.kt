@@ -56,10 +56,10 @@ abstract class Store : ViewModel() {
         unRegister()
     }
 
-    fun register(vararg actionType: String) = register(this, *actionType)
+    fun register(vararg actionType: String) = Dispatcher.instance.register(this, *actionType)
 
     fun unRegister() {
-        if (BuildConfig.DEBUG) {
+        if (enableLog) {
             Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} has unregistered")
         }
         disposable = null
@@ -67,15 +67,27 @@ abstract class Store : ViewModel() {
 
     internal fun handleAction(action: Action) {
         if (action.isError) {
-            if (BuildConfig.DEBUG) {
-                Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onError $action")
+            if (enableLog) {
+                Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onError : $action")
             }
             onError(action)
         } else {
-            if (BuildConfig.DEBUG) {
-                Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onAction $action")
+            try {
+                if (enableLog) {
+                    Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onAction : $action")
+                }
+                onAction(action)
+            } catch (e: Exception) {
+                val errorAction = Action(action.type, e).apply {
+                    isError = true
+                    target = action.target
+                    singleData = action.singleData
+                    data.putAll(action.data.toList())
+                }
+                Log.e(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onAction : $action throw exception ${e.message}")
+                Log.e(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onError : $errorAction")
+                onError(errorAction)
             }
-            onAction(action)
         }
     }
 }
