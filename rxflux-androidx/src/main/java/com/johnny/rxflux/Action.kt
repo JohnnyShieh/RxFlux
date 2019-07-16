@@ -15,36 +15,52 @@
  */
 package com.johnny.rxflux
 
-import androidx.collection.ArrayMap
+/**
+ * The Action type define the identified id of action and the data class type.
+ */
+data class ActionType<out T, out V>(
+    val id: String,
+    val initValueClass: Class<out T>,
+    val successValueClass: Class<out V>
+)
 
 /**
- * Object class that hold the type of action and the data we want to attach to it
+ * Normal action class that hold the type of action and the data we want to attach to it
  *
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.1
  *
  * Created on 2018/3/29
  */
-data class Action(
-    val type: String,
-    val throwable: Throwable? = null
-) {
-    internal var isError = false
+data class Action<out T, out V>(
+    val type: ActionType<T, V>,
+    /** The target store to receive the action, like [android.os.Message.getTarget] */
+    val target: Store?,
+    val initValue: T,
+    val successValue: V
+) : Handle {
+    override var handled: Boolean = false
+}
 
-    /**
-     * The target store to receive the action, like [android.os.Message.getTarget]
-     */
-    var target: Store? = null
+/**
+ * Error action class that hold the type of action and the data we want to attach to it
+ *
+ * @author Johnny Shieh (JohnnyShieh17@gmail.com)
+ * @version 1.1
+ *
+ * Created on 2018/3/29
+ */
+data class ErrorAction<out T>(
+    val type: ActionType<T, *>,
+    /** The target store to receive the action, like [android.os.Message.getTarget] */
+    val target: Store?,
+    val initValue: T,
+    val throwable: Throwable?
+) : Handle {
+    override var handled: Boolean = false
+}
 
-    /**
-     * Just like [android.view.View] setTag(), getTag()
-     */
-    var singleData: Any? = null
-    /**
-     * Just like [android.view.View] setTag(key, value), getTag(key)
-     */
-    val data: ArrayMap<String, Any> by lazy { ArrayMap<String, Any>() }
-
-    override fun toString() = "Action(type='$type', throwable=$throwable, singleData=$singleData, data=$data)"
-
+interface Handle {
+    /** whether the object be handled or not */
+    var handled: Boolean
 }

@@ -30,6 +30,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation "androidx.paging:paging-runtime:2.1.0"
 
     implementation project(':rxflux-androidx')
     testImplementation 'junit:junit:4.12'

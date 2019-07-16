@@ -8,37 +8,45 @@ package com.johnny.rxflux
  *
  * Created on 2019-06-13
  */
-internal var enableLog = false
-    private set
+object RxFlux {
+    const val RxFluxTag = "RxFlux"
+    var enableLog = false
+        private set
 
-fun enableRxFluxLog(enabled: Boolean) {
-    enableLog = enabled
-}
-
-fun postAction(type: String, singleObj: Any? = null, store: Store? = null) = Dispatcher.instance.postAction(Action(type).apply {
-    singleData = singleObj
-    target = store
-})
-
-fun postAction(type: String, vararg params: Pair<String, Any>, store: Store? = null) {
-    val action = Action(type)
-    params.forEach {
-        action.data[it.first] = it.second
+    fun enableRxFluxLog(enabled: Boolean) {
+        enableLog = enabled
     }
-    action.target = store
-    Dispatcher.instance.postAction(action)
-}
 
-fun postError(type: String, throwable: Throwable? = null, singleObj: Any? = null, store: Store? = null) = Dispatcher.instance.postError(Action(type, throwable).apply {
-    singleData = singleObj
-    target = store
-})
+    inline fun <reified T, reified V> newActionType(id: String) = ActionType(id, T::class.java, V::class.java)
 
-fun postError(type: String, throwable: Throwable? = null, vararg params: Pair<String, Any>, store: Store? = null) {
-    val action = Action(type, throwable)
-    params.forEach {
-        action.data[it.first] = it.second
-    }
-    action.target = store
-    Dispatcher.instance.postError(action)
+    fun postAction(
+        type: ActionType<Unit, Unit>,
+        target: Store? = null
+    ) = Dispatcher.postAction(Action(type, target, Unit, Unit))
+
+    fun <V> postAction(
+        type: ActionType<Unit, V>,
+        target: Store? = null,
+        successValue: V
+    ) = Dispatcher.postAction(Action(type, target, Unit, successValue))
+
+    fun <T, V> postAction(
+        type: ActionType<T, V>,
+        target: Store? = null,
+        initValue: T,
+        successValue: V
+    ) = Dispatcher.postAction(Action(type, target, initValue, successValue))
+
+    fun postError(
+        type: ActionType<Unit, *>,
+        target: Store? = null,
+        throwable: Throwable? = null
+    ) = Dispatcher.postError(ErrorAction(type, target, Unit, throwable))
+
+    fun <T> postError(
+        type: ActionType<T, *>,
+        target: Store? = null,
+        initValue: T,
+        throwable: Throwable? = null
+    ) = Dispatcher.postError(ErrorAction(type, target, initValue, throwable))
 }

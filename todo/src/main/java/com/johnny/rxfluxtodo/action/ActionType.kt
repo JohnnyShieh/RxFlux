@@ -1,5 +1,7 @@
 package com.johnny.rxfluxtodo.action
 
+import com.johnny.rxflux.RxFlux
+
 /*
  * Copyright (C) 2017 Johnny Shieh Open Source Project
  *
@@ -25,11 +27,11 @@ package com.johnny.rxfluxtodo.action
  * Created on 2017/3/28
  */
 object ActionType {
-    const val TODO_CREATE = "todo-create"
-    const val TODO_COMPLETE = "todo-complete"
-    const val TODO_DESTROY = "todo-destroy"
-    const val TODO_DESTROY_COMPLETED = "todo-destroy-completed"
-    const val TODO_TOGGLE_COMPLETE_ALL = "todo-toggle-complete-all"
-    const val TODO_UNDO_COMPLETE = "todo-undo-complete"
-    const val TODO_UNDO_DESTROY = "todo-undo-destroy"
+    val TODO_CREATE = RxFlux.newActionType<Unit, String>("todo-create")
+    val TODO_COMPLETE = RxFlux.newActionType<Unit, Long>("todo-complete")
+    val TODO_DESTROY = RxFlux.newActionType<Unit, Long>("todo-destroy")
+    val TODO_DESTROY_COMPLETED = RxFlux.newActionType<Unit, Unit>("todo-destroy-completed")
+    val TODO_TOGGLE_COMPLETE_ALL = RxFlux.newActionType<Unit, Unit>("todo-toggle-complete-all")
+    val TODO_UNDO_COMPLETE = RxFlux.newActionType<Unit, Long>("todo-undo-complete")
+    val TODO_UNDO_DESTROY by lazy(LazyThreadSafetyMode.NONE) { RxFlux.newActionType<Unit, Unit>("todo-undo-destroy") }
 }

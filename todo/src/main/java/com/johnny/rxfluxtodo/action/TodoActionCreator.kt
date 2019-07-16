@@ -15,7 +15,7 @@
  */
 package com.johnny.rxfluxtodo.action
 
-import com.johnny.rxflux.postAction
+import com.johnny.rxflux.RxFlux
 import com.johnny.rxfluxtodo.model.Todo
 
 /**
@@ -28,18 +28,18 @@ import com.johnny.rxfluxtodo.model.Todo
  */
 class TodoActionCreator {
 
-    fun create(text: String) = postAction(ActionType.TODO_CREATE, text)
+    fun create(text: String) = RxFlux.postAction(ActionType.TODO_CREATE, successValue = text)
 
-    fun destroy(id: Long) = postAction(ActionType.TODO_DESTROY, id)
+    fun destroy(id: Long) = RxFlux.postAction(ActionType.TODO_DESTROY, successValue = id)
 
-    fun undoDestroy() = postAction(ActionType.TODO_UNDO_DESTROY)
+    fun undoDestroy() = RxFlux.postAction(ActionType.TODO_UNDO_DESTROY)
 
     fun toggleComplete(todo: Todo) {
         val actionType = if (todo.isComplete) ActionType.TODO_UNDO_COMPLETE else ActionType.TODO_COMPLETE
-        postAction(actionType, todo.id)
+        RxFlux.postAction(actionType, successValue = todo.id)
     }
 
-    fun toggleCompleteAll() = postAction(ActionType.TODO_TOGGLE_COMPLETE_ALL)
+    fun toggleCompleteAll() = RxFlux.postAction(ActionType.TODO_TOGGLE_COMPLETE_ALL)
 
-    fun destroyCompleted() = postAction(ActionType.TODO_DESTROY_COMPLETED)
+    fun destroyCompleted() = RxFlux.postAction(ActionType.TODO_DESTROY_COMPLETED)
 }

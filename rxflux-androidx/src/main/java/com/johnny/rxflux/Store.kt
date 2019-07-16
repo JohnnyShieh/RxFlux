@@ -17,77 +17,200 @@ package com.johnny.rxflux
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import io.reactivex.disposables.Disposable
+import com.johnny.rxflux.RxFlux.RxFluxTag
+import com.johnny.rxflux.RxFlux.enableLog
+import io.reactivex.internal.disposables.ListCompositeDisposable
 
 /**
- * Flux store
+ * Flux store, It's recommend to register som action when initialize store.
  *
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.2
  *
  */
-abstract class Store : ViewModel() {
+open class Store : ViewModel() {
 
-    internal var disposable: Disposable? = null
-        set(value) {
-            val oldValue = field
-            if (null != oldValue && !oldValue.isDisposed) {
-                oldValue.dispose()
-            }
-            field = value
-        }
-
-    val isRegistered: Boolean
-        get() = (disposable != null)
-
-    /**
-     * handle normal action which has registered
-     * @param action normal action which has registered
-     */
-    protected abstract fun onAction(action: Action)
-
-    /**
-     * handle error action which has registered
-     * @param action error action which has registered
-     */
-    protected abstract fun onError(action: Action)
+    protected val disposableList = ListCompositeDisposable()
 
     override fun onCleared() {
-        unRegister()
+        unregister()
     }
 
-    fun register(vararg actionType: String) = Dispatcher.instance.register(this, *actionType)
+    protected fun register(
+        actionType: ActionType<Unit, Unit>,
+        successHandler : (() -> Unit)
+    ) {
+        val disposable = Dispatcher.normalBus
+            .ofType(Action::class.java)
+            .filter {
+                if (null != it.target) {
+                    it.target === this && it.type == actionType
+                } else {
+                    it.type == actionType
+                }
+            }
+            .subscribe {
+                it.handled = true
+                // catch exception avoid complete subscribe relationship
+                try {
+                    if (enableLog) {
+                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it")
+                    }
+                    successHandler.invoke()
+                } catch (e: Throwable) {
+                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it throws Exceptiop", e)
+                }
+            }
+        disposableList.add(disposable)
+    }
 
-    fun unRegister() {
+    protected inline fun <reified V> register(
+        actionType: ActionType<Unit, V>,
+        crossinline successHandler : ((successValue: V) -> Unit)
+    ) {
+        val disposable = Dispatcher.normalBus
+            .ofType(Action::class.java)
+            .filter {
+                if (null != it.target) {
+                    it.target === this && it.type == actionType
+                } else {
+                    it.type == actionType
+                }
+            }
+            .subscribe {
+                it.handled = true
+                // catch exception avoid complete subscribe relationship
+                try {
+                    if (enableLog) {
+                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it")
+                    }
+                    successHandler.invoke(it.successValue as V)
+                } catch (e: Throwable) {
+                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it throws Exceptiop", e)
+                }
+            }
+        disposableList.add(disposable)
+    }
+
+    protected inline fun <reified T, reified V> register(
+        actionType: ActionType<T, V>,
+        crossinline successHandler : ((initValue: T, successValue: V) -> Unit)
+    ) {
+        val disposable = Dispatcher.normalBus
+            .ofType(Action::class.java)
+            .filter {
+                if (null != it.target) {
+                    it.target === this && it.type == actionType
+                } else {
+                    it.type == actionType
+                }
+            }
+            .subscribe {
+                it.handled = true
+                // catch exception avoid complete subscribe relationship
+                try {
+                    if (enableLog) {
+                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it")
+                    }
+                    successHandler.invoke(it.initValue as T, it.successValue as V)
+                } catch (e: Throwable) {
+                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it throws Exceptiop", e)
+                }
+            }
+        disposableList.add(disposable)
+    }
+
+    protected fun register(
+        actionType: ActionType<Unit, Unit>,
+        successHandler : (() -> Unit),
+        erorHandler : ((Throwable?) -> Unit)
+    ) {
+        register(actionType, successHandler)
+        val disposable = Dispatcher.errorBus
+            .ofType(ErrorAction::class.java)
+            .filter {
+                if (null != it.target) {
+                    it.target === this && it.type == actionType
+                } else {
+                    it.type == actionType
+                }
+            }.subscribe {
+                it.handled = true
+                // catch exception avoid complete subscribe relationship
+                try {
+                    if (enableLog) {
+                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it")
+                    }
+                    erorHandler.invoke(it.throwable)
+                } catch (e: Throwable) {
+                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it throws Exceptiop", e)
+                }
+            }
+        disposableList.add(disposable)
+    }
+
+    protected inline fun <reified V> register(
+        actionType: ActionType<Unit, V>,
+        crossinline successHandler : ((successValue: V) -> Unit),
+        crossinline erorHandler : ((Throwable?) -> Unit)
+    ) {
+        register(actionType, successHandler)
+        val disposable = Dispatcher.errorBus
+            .ofType(ErrorAction::class.java)
+            .filter {
+                if (null != it.target) {
+                    it.target === this && it.type == actionType
+                } else {
+                    it.type == actionType
+                }
+            }.subscribe {
+                it.handled = true
+                // catch exception avoid complete subscribe relationship
+                try {
+                    if (enableLog) {
+                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it")
+                    }
+                    erorHandler.invoke(it.throwable)
+                } catch (e: Throwable) {
+                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it throws Exceptiop", e)
+                }
+            }
+        disposableList.add(disposable)
+    }
+
+    protected inline fun <reified T, reified V> register(
+        actionType: ActionType<T, V>,
+        crossinline successHandler : ((initValue: T, successValue: V) -> Unit),
+        crossinline erorHandler : ((initValue: T, Throwable?) -> Unit)
+    ) {
+        register(actionType, successHandler)
+        val disposable = Dispatcher.errorBus
+            .ofType(ErrorAction::class.java)
+            .filter {
+                if (null != it.target) {
+                    it.target === this && it.type == actionType
+                } else {
+                    it.type == actionType
+                }
+            }.subscribe {
+                it.handled = true
+                // catch exception avoid complete subscribe relationship
+                try {
+                    if (enableLog) {
+                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it")
+                    }
+                    erorHandler.invoke(it.initValue as T, it.throwable)
+                } catch (e: Throwable) {
+                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it throws Exceptiop", e)
+                }
+            }
+        disposableList.add(disposable)
+    }
+
+    private fun unregister() {
         if (enableLog) {
-            Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} has unregistered")
+            Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} has unregistered")
         }
-        disposable = null
-    }
-
-    internal fun handleAction(action: Action) {
-        if (action.isError) {
-            if (enableLog) {
-                Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onError : $action")
-            }
-            onError(action)
-        } else {
-            try {
-                if (enableLog) {
-                    Log.d(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onAction : $action")
-                }
-                onAction(action)
-            } catch (e: Exception) {
-                val errorAction = Action(action.type, e).apply {
-                    isError = true
-                    target = action.target
-                    singleData = action.singleData
-                    data.putAll(action.data.toList())
-                }
-                Log.e(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onAction : $action throw exception ${e.message}")
-                Log.e(Dispatcher.TAG, "Store ${this.javaClass.simpleName} onError : $errorAction")
-                onError(errorAction)
-            }
-        }
+        disposableList.dispose()
     }
 }

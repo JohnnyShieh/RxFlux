@@ -18,6 +18,8 @@ package com.johnny.rxflux
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.MainThread
+import com.johnny.rxflux.RxFlux.RxFluxTag
+import com.johnny.rxflux.RxFlux.enableLog
 
 /**
  * Flux dispatcher, contains a rxbus used to send action to store
@@ -26,66 +28,31 @@ import androidx.annotation.MainThread
  * @version 1.1
  *
  */
-class Dispatcher private constructor() : IDispatcher {
+object Dispatcher {
 
-    companion object {
-        const val TAG = "RxFlux"
-        var instance: IDispatcher = Dispatcher()
-    }
+    val normalBus = PublishSubject.create().toSerialized()
 
-    private val bus = RxBus()
+    val errorBus = PublishSubject.create().toSerialized()
 
     @MainThread
-    override fun register(store: Store, vararg actionTypes: String) {
-        if (enableLog) {
-            if (actionTypes.isEmpty()) {
-                Log.d(TAG, "Store ${store.javaClass.simpleName} has registered all action")
-            } else {
-                Log.d(TAG, "Store ${store.javaClass.simpleName} has registered action : $actionTypes")
-            }
-        }
-        store.disposable = bus.toObservable(Action::class.java)
-                .filter { action ->
-                    // the target of action has the highest priority
-                    if (action.target != null) {
-                        return@filter action.target === store
-                    } else {
-                        if (actionTypes.isEmpty()) {
-                            return@filter true
-                        }
-                        return@filter actionTypes.any { it == action.type }
-                    }
-                }.subscribe { action ->
-                    // catch exception avoid complete subscribe relationship
-                    try {
-                        store.handleAction(action)
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Store ${store.javaClass.simpleName} handle action ${action.type} throws Exceptiop", e)
-                    }
-                }
-    }
-
-    @MainThread
-    override fun postAction(action: Action) {
+    fun postAction(action: Action<*, *>) {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw IllegalThreadStateException("You must call postAction() method on main thread!")
         }
-        action.isError = false
         if (enableLog) {
-            Log.d(TAG, "Dispatcher post action : $action")
+            Log.d(RxFluxTag, "post action : $action")
         }
-        bus.post(action)
+        normalBus.onNext(action)
     }
 
     @MainThread
-    override fun postError(action: Action) {
+    fun postError(action: ErrorAction<*>) {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw IllegalThreadStateException("You must call postError() method on main thread!")
         }
-        action.isError = true
         if (enableLog) {
-            Log.d(TAG, "Dispatcher post error : $action")
+            Log.d(RxFluxTag, "post error : $action")
         }
-        bus.post(action)
+        errorBus.onNext(action)
     }
 }

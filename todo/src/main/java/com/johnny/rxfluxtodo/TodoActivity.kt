@@ -28,7 +28,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import com.johnny.rxfluxtodo.action.ActionType
+import com.johnny.rxflux.RxFlux
 import com.johnny.rxfluxtodo.action.TodoActionCreator
 import com.johnny.rxfluxtodo.store.TodoStore
 
@@ -56,6 +56,7 @@ class TodoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        RxFlux.enableRxFluxLog(true)
         setContentView(R.layout.activity_main)
         initDependencies()
         setupView()
@@ -64,15 +65,6 @@ class TodoActivity : AppCompatActivity() {
     private fun initDependencies() {
         mActionCreator = TodoActionCreator()
         mTodoStore = ViewModelProviders.of(this).get(TodoStore::class.java)
-        mTodoStore.register(
-            ActionType.TODO_COMPLETE,
-            ActionType.TODO_CREATE,
-            ActionType.TODO_DESTROY,
-            ActionType.TODO_DESTROY_COMPLETED,
-            ActionType.TODO_TOGGLE_COMPLETE_ALL,
-            ActionType.TODO_UNDO_COMPLETE,
-            ActionType.TODO_UNDO_DESTROY
-        )
     }
 
     private fun setupView() {
