@@ -1,30 +1,30 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
- * the License for the specific language governing permissions and limitations under the License.
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.johnny.rxflux;
 
 import android.util.Log;
-
-import io.reactivex.annotations.CheckReturnValue;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.annotations.NonNull;
-import java.util.concurrent.atomic.*;
-
 import io.reactivex.Observer;
+import io.reactivex.annotations.CheckReturnValue;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.subjects.Subject;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * copy from {@link io.reactivex.subjects.PublishSubject}
@@ -32,6 +32,7 @@ import io.reactivex.subjects.Subject;
  * add the judge logic for whether the action is handled or not, after the {@code onNext} method.
  */
 public final class PublishSubject extends Subject<Handle> {
+
     /** The terminated indicator for the subscribers array. */
     @SuppressWarnings("rawtypes")
     static final PublishDisposable[] TERMINATED = new PublishDisposable[0];
@@ -91,7 +92,7 @@ public final class PublishSubject extends Subject<Handle> {
      * @return true if successful, false if the subject has terminated
      */
     boolean add(PublishDisposable ps) {
-        for (;;) {
+        for (; ; ) {
             PublishDisposable[] a = subscribers.get();
             if (a == TERMINATED) {
                 return false;
@@ -115,7 +116,7 @@ public final class PublishSubject extends Subject<Handle> {
      */
     @SuppressWarnings("unchecked")
     void remove(PublishDisposable ps) {
-        for (;;) {
+        for (; ; ) {
             PublishDisposable[] a = subscribers.get();
             if (a == TERMINATED || a == EMPTY) {
                 return;
@@ -158,7 +159,8 @@ public final class PublishSubject extends Subject<Handle> {
 
     @Override
     public void onNext(Handle t) {
-        ObjectHelper.requireNonNull(t, "onNext called with null. Null values are generally not allowed in 2.x operators and sources.");
+        ObjectHelper.requireNonNull(t,
+                "onNext called with null. Null values are generally not allowed in 2.x operators and sources.");
         for (PublishDisposable pd : subscribers.get()) {
             pd.onNext(t);
         }
@@ -170,7 +172,8 @@ public final class PublishSubject extends Subject<Handle> {
     @SuppressWarnings("unchecked")
     @Override
     public void onError(Throwable t) {
-        ObjectHelper.requireNonNull(t, "onError called with null. Null values are generally not allowed in 2.x operators and sources.");
+        ObjectHelper.requireNonNull(t,
+                "onError called with null. Null values are generally not allowed in 2.x operators and sources.");
         if (subscribers.get() == TERMINATED) {
             RxJavaPlugins.onError(t);
             return;

@@ -17,7 +17,13 @@ object RxFlux {
         enableLog = enabled
     }
 
-    inline fun <reified T, reified V> newActionType(id: String) = ActionType(id, T::class.java, V::class.java)
+    inline fun <reified T, reified V> newPairActionType(id: String) =
+        ActionType(id, T::class.java, V::class.java)
+
+    inline fun <reified V> newActionType(id: String) =
+        ActionType(id, Unit::class.java, V::class.java)
+
+    fun newUnitActionType(id: String) = ActionType(id, Unit::class.java, Unit::class.java)
 
     fun postAction(
         type: ActionType<Unit, Unit>,

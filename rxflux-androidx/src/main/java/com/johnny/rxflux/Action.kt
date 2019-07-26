@@ -39,6 +39,7 @@ data class Action<out T, out V>(
     val initValue: T,
     val successValue: V
 ) : Handle {
+    /** If the action is not accept by any Store, You will see it at error log. */
     override var handled: Boolean = false
 }
 
@@ -57,6 +58,7 @@ data class ErrorAction<out T>(
     val initValue: T,
     val throwable: Throwable?
 ) : Handle {
+    /** If the action is not accept by any Store, You will see it at error log. */
     override var handled: Boolean = false
 }
 

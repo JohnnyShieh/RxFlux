@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.johnny.rxfluxtodo.store
+package com.johnny.rxfluxtodo.todo
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.johnny.rxflux.RxFlux
 import com.johnny.rxflux.Store
-import com.johnny.rxfluxtodo.action.ActionType
 import com.johnny.rxfluxtodo.model.Todo
 
 /**
@@ -30,6 +29,32 @@ import com.johnny.rxfluxtodo.model.Todo
  *
  * Created on 2018/3/29
  */
+private val TODO_CREATE by lazy { RxFlux.newActionType<Unit, String>("todo-create") }
+private val TODO_COMPLETE by lazy { RxFlux.newActionType<Unit, Long>("todo-complete") }
+private val TODO_DESTROY by lazy { RxFlux.newActionType<Unit, Long>("todo-destroy") }
+private val TODO_DESTROY_COMPLETED by lazy { RxFlux.newActionType<Unit, Unit>("todo-destroy-completed") }
+private val TODO_TOGGLE_COMPLETE_ALL by lazy { RxFlux.newActionType<Unit, Unit>("todo-toggle-complete-all") }
+private val TODO_UNDO_COMPLETE by lazy { RxFlux.newActionType<Unit, Long>("todo-undo-complete") }
+private val TODO_UNDO_DESTROY by lazy { RxFlux.newActionType<Unit, Unit>("todo-undo-destroy") }
+
+class TodoActionCreator {
+
+    fun create(text: String) = RxFlux.postAction(TODO_CREATE, successValue = text)
+
+    fun destroy(id: Long) = RxFlux.postAction(TODO_DESTROY, successValue = id)
+
+    fun undoDestroy() = RxFlux.postAction(TODO_UNDO_DESTROY)
+
+    fun toggleComplete(todo: Todo) {
+        val actionType = if (todo.isComplete) TODO_UNDO_COMPLETE else TODO_COMPLETE
+        RxFlux.postAction(actionType, successValue = todo.id)
+    }
+
+    fun toggleCompleteAll() = RxFlux.postAction(TODO_TOGGLE_COMPLETE_ALL)
+
+    fun destroyCompleted() = RxFlux.postAction(TODO_DESTROY_COMPLETED)
+}
+
 class TodoStore : Store() {
 
     private val list = mutableListOf<Todo>()
@@ -41,25 +66,25 @@ class TodoStore : Store() {
     val canUndo = Transformations.map(lastDeleted) { lastDeleted -> lastDeleted != null }
 
     init {
-        register(ActionType.TODO_CREATE) { value ->
+        register(TODO_CREATE) { value ->
             create(value)
         }
-        register(ActionType.TODO_DESTROY) { value ->
+        register(TODO_DESTROY) { value ->
             destroy(value)
         }
-        register(ActionType.TODO_UNDO_DESTROY) {
+        register(TODO_UNDO_DESTROY) {
             undoDestroy()
         }
-        register(ActionType.TODO_COMPLETE) { value ->
+        register(TODO_COMPLETE) { value ->
             updateComplete(value, true)
         }
-        register(ActionType.TODO_UNDO_COMPLETE) { value ->
+        register(TODO_UNDO_COMPLETE) { value ->
             updateComplete(value, false)
         }
-        register(ActionType.TODO_DESTROY_COMPLETED) {
+        register(TODO_DESTROY_COMPLETED) {
             destroyCompleted()
         }
-        register(ActionType.TODO_TOGGLE_COMPLETE_ALL) {
+        register(TODO_TOGGLE_COMPLETE_ALL) {
             toggleCompleteAll()
         }
     }

@@ -16,18 +16,15 @@ package com.johnny.rxfluxtodo
  * limitations under the License.
  */
 
-import com.johnny.rxfluxtodo.action.TodoActionCreator
-import com.johnny.rxfluxtodo.model.Todo
-
-import androidx.recyclerview.widget.RecyclerView
 import android.text.SpannableString
 import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.johnny.rxfluxtodo.model.Todo
+import com.johnny.rxfluxtodo.todo.TodoActionCreator
+import kotlinx.android.synthetic.main.todo_row_layout.view.*
 
 
 /**
@@ -61,25 +58,21 @@ class TodoRecyclerAdapter(private val mActionCreator: TodoActionCreator) :
         notifyDataSetChanged()
     }
 
-    class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
-        var todoText: TextView = v.findViewById(R.id.row_text)
-        var todoCheck: CheckBox = v.findViewById(R.id.row_checkbox)
-        var todoDelete: Button = v.findViewById(R.id.row_delete)
+    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         fun bindView(actionCreator: TodoActionCreator, todo: Todo) {
             if (todo.isComplete) {
                 val spanString = SpannableString(todo.text)
                 spanString.setSpan(StrikethroughSpan(), 0, spanString.length, 0)
-                todoText.text = spanString
+                itemView.tvTodoContent.text = spanString
             } else {
-                todoText.text = todo.text
+                itemView.tvTodoContent.text = todo.text
             }
 
+            itemView.chkComplete.isChecked = todo.isComplete
+            itemView.chkComplete.setOnClickListener { actionCreator.toggleComplete(todo) }
 
-            todoCheck.isChecked = todo.isComplete
-            todoCheck.setOnClickListener { actionCreator.toggleComplete(todo) }
-
-            todoDelete.setOnClickListener { actionCreator.destroy(todo.id) }
+            itemView.btnDelete.setOnClickListener { actionCreator.destroy(todo.id) }
         }
     }
 }

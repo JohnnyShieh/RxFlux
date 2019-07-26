@@ -16,21 +16,17 @@ package com.johnny.rxfluxtodo
  * limitations under the License.
  */
 
+import android.os.Bundle
+import android.text.TextUtils
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import android.text.TextUtils
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
+import com.google.android.material.snackbar.Snackbar
 import com.johnny.rxflux.RxFlux
-import com.johnny.rxfluxtodo.action.TodoActionCreator
-import com.johnny.rxfluxtodo.store.TodoStore
+import com.johnny.rxfluxtodo.todo.TodoActionCreator
+import com.johnny.rxfluxtodo.todo.TodoStore
+import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * description
@@ -42,17 +38,13 @@ import com.johnny.rxfluxtodo.store.TodoStore
  */
 class TodoActivity : AppCompatActivity() {
 
-    private lateinit var vMainEdit: EditText
-    private lateinit var vMainGroup: ViewGroup
-    private lateinit var vMainCheck: CheckBox
-
     private lateinit var mAdapter: TodoRecyclerAdapter
 
     private lateinit var mActionCreator: TodoActionCreator
     private lateinit var mTodoStore: TodoStore
 
     private val inputText: String
-        get() = vMainEdit.text.toString()
+        get() = edtInput.text.toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,31 +60,26 @@ class TodoActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
-        vMainGroup = findViewById(R.id.main_layout)
-        vMainEdit = findViewById(R.id.main_input)
-
-        val mainAdd = findViewById<Button>(R.id.main_add)
-        mainAdd.setOnClickListener {
+        btnAddTodo.setOnClickListener {
             addTodo()
             resetMainInput()
         }
-        vMainCheck = findViewById(R.id.main_checkbox)
-        vMainCheck.setOnClickListener { checkAll() }
-        val mainClearCompleted = findViewById<Button>(R.id.main_clear_completed)
-        mainClearCompleted.setOnClickListener {
+        chkAllComplete.setOnClickListener { checkAll() }
+        btnClearCompleted.setOnClickListener {
             clearCompleted()
             resetMainCheck()
         }
 
-        val mainList = findViewById<RecyclerView>(R.id.main_list)
-        mainList.layoutManager = LinearLayoutManager(this)
+        rvTodo.layoutManager = LinearLayoutManager(this)
         mAdapter = TodoRecyclerAdapter(mActionCreator)
-        mainList.adapter = mAdapter
+        rvTodo.adapter = mAdapter
 
-        mTodoStore.todoList.observe(this, Observer { mAdapter.setItems(mTodoStore.todoList.value!!) })
+        mTodoStore.todoList.observe(
+            this,
+            Observer { mAdapter.setItems(mTodoStore.todoList.value!!) })
         mTodoStore.canUndo.observe(this, Observer { canUndo ->
             if (canUndo == true) {
-                val snackbar = Snackbar.make(vMainGroup, "Element deleted", Snackbar.LENGTH_LONG)
+                val snackbar = Snackbar.make(vContainer, "Element deleted", Snackbar.LENGTH_LONG)
                 snackbar.setAction("Undo") { mActionCreator.undoDestroy() }
                 snackbar.show()
             }
@@ -114,12 +101,12 @@ class TodoActivity : AppCompatActivity() {
     }
 
     private fun resetMainInput() {
-        vMainEdit.setText("")
+        edtInput.setText("")
     }
 
     private fun resetMainCheck() {
-        if (vMainCheck.isChecked) {
-            vMainCheck.isChecked = false
+        if (chkAllComplete.isChecked) {
+            chkAllComplete.isChecked = false
         }
     }
 

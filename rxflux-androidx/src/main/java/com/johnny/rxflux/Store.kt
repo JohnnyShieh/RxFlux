@@ -38,7 +38,7 @@ open class Store : ViewModel() {
 
     protected fun register(
         actionType: ActionType<Unit, Unit>,
-        successHandler : (() -> Unit)
+        successHandler: (() -> Unit)
     ) {
         val disposable = Dispatcher.normalBus
             .ofType(Action::class.java)
@@ -54,11 +54,18 @@ open class Store : ViewModel() {
                 // catch exception avoid complete subscribe relationship
                 try {
                     if (enableLog) {
-                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it")
+                        Log.d(
+                            RxFluxTag,
+                            "Store ${this.javaClass.simpleName} handle normal action $it"
+                        )
                     }
                     successHandler.invoke()
                 } catch (e: Throwable) {
-                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it throws Exceptiop", e)
+                    Log.e(
+                        RxFluxTag,
+                        "Store ${this.javaClass.simpleName} handle normal action $it throws Exceptiop",
+                        e
+                    )
                 }
             }
         disposableList.add(disposable)
@@ -66,7 +73,7 @@ open class Store : ViewModel() {
 
     protected inline fun <reified V> register(
         actionType: ActionType<Unit, V>,
-        crossinline successHandler : ((successValue: V) -> Unit)
+        crossinline successHandler: ((successValue: V) -> Unit)
     ) {
         val disposable = Dispatcher.normalBus
             .ofType(Action::class.java)
@@ -82,11 +89,18 @@ open class Store : ViewModel() {
                 // catch exception avoid complete subscribe relationship
                 try {
                     if (enableLog) {
-                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it")
+                        Log.d(
+                            RxFluxTag,
+                            "Store ${this.javaClass.simpleName} handle normal action $it"
+                        )
                     }
                     successHandler.invoke(it.successValue as V)
                 } catch (e: Throwable) {
-                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it throws Exceptiop", e)
+                    Log.e(
+                        RxFluxTag,
+                        "Store ${this.javaClass.simpleName} handle normal action $it throws Exceptiop",
+                        e
+                    )
                 }
             }
         disposableList.add(disposable)
@@ -94,7 +108,7 @@ open class Store : ViewModel() {
 
     protected inline fun <reified T, reified V> register(
         actionType: ActionType<T, V>,
-        crossinline successHandler : ((initValue: T, successValue: V) -> Unit)
+        crossinline successHandler: ((initValue: T, successValue: V) -> Unit)
     ) {
         val disposable = Dispatcher.normalBus
             .ofType(Action::class.java)
@@ -110,11 +124,18 @@ open class Store : ViewModel() {
                 // catch exception avoid complete subscribe relationship
                 try {
                     if (enableLog) {
-                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it")
+                        Log.d(
+                            RxFluxTag,
+                            "Store ${this.javaClass.simpleName} handle normal action $it"
+                        )
                     }
                     successHandler.invoke(it.initValue as T, it.successValue as V)
                 } catch (e: Throwable) {
-                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle normal action $it throws Exceptiop", e)
+                    Log.e(
+                        RxFluxTag,
+                        "Store ${this.javaClass.simpleName} handle normal action $it throws Exceptiop",
+                        e
+                    )
                 }
             }
         disposableList.add(disposable)
@@ -122,8 +143,8 @@ open class Store : ViewModel() {
 
     protected fun register(
         actionType: ActionType<Unit, Unit>,
-        successHandler : (() -> Unit),
-        erorHandler : ((Throwable?) -> Unit)
+        successHandler: (() -> Unit),
+        erorHandler: ((Throwable?) -> Unit)
     ) {
         register(actionType, successHandler)
         val disposable = Dispatcher.errorBus
@@ -139,11 +160,18 @@ open class Store : ViewModel() {
                 // catch exception avoid complete subscribe relationship
                 try {
                     if (enableLog) {
-                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it")
+                        Log.d(
+                            RxFluxTag,
+                            "Store ${this.javaClass.simpleName} handle error action $it"
+                        )
                     }
                     erorHandler.invoke(it.throwable)
                 } catch (e: Throwable) {
-                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it throws Exceptiop", e)
+                    Log.e(
+                        RxFluxTag,
+                        "Store ${this.javaClass.simpleName} handle error action $it throws Exceptiop",
+                        e
+                    )
                 }
             }
         disposableList.add(disposable)
@@ -151,8 +179,8 @@ open class Store : ViewModel() {
 
     protected inline fun <reified V> register(
         actionType: ActionType<Unit, V>,
-        crossinline successHandler : ((successValue: V) -> Unit),
-        crossinline erorHandler : ((Throwable?) -> Unit)
+        crossinline successHandler: ((successValue: V) -> Unit),
+        crossinline erorHandler: ((Throwable?) -> Unit)
     ) {
         register(actionType, successHandler)
         val disposable = Dispatcher.errorBus
@@ -168,11 +196,18 @@ open class Store : ViewModel() {
                 // catch exception avoid complete subscribe relationship
                 try {
                     if (enableLog) {
-                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it")
+                        Log.d(
+                            RxFluxTag,
+                            "Store ${this.javaClass.simpleName} handle error action $it"
+                        )
                     }
                     erorHandler.invoke(it.throwable)
                 } catch (e: Throwable) {
-                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it throws Exceptiop", e)
+                    Log.e(
+                        RxFluxTag,
+                        "Store ${this.javaClass.simpleName} handle error action $it throws Exceptiop",
+                        e
+                    )
                 }
             }
         disposableList.add(disposable)
@@ -180,8 +215,8 @@ open class Store : ViewModel() {
 
     protected inline fun <reified T, reified V> register(
         actionType: ActionType<T, V>,
-        crossinline successHandler : ((initValue: T, successValue: V) -> Unit),
-        crossinline erorHandler : ((initValue: T, Throwable?) -> Unit)
+        crossinline successHandler: ((initValue: T, successValue: V) -> Unit),
+        crossinline erorHandler: ((initValue: T, Throwable?) -> Unit)
     ) {
         register(actionType, successHandler)
         val disposable = Dispatcher.errorBus
@@ -197,11 +232,18 @@ open class Store : ViewModel() {
                 // catch exception avoid complete subscribe relationship
                 try {
                     if (enableLog) {
-                        Log.d(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it")
+                        Log.d(
+                            RxFluxTag,
+                            "Store ${this.javaClass.simpleName} handle error action $it"
+                        )
                     }
                     erorHandler.invoke(it.initValue as T, it.throwable)
                 } catch (e: Throwable) {
-                    Log.e(RxFluxTag, "Store ${this.javaClass.simpleName} handle error action $it throws Exceptiop", e)
+                    Log.e(
+                        RxFluxTag,
+                        "Store ${this.javaClass.simpleName} handle error action $it throws Exceptiop",
+                        e
+                    )
                 }
             }
         disposableList.add(disposable)

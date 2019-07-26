@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?listPreferredItemHeight"
     android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:weightSum="1"
-    android:orientation="horizontal">
-
-
+    >
     <CheckBox
-        android:id="@+id/row_checkbox"
+        android:id="@+id/chkComplete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
-
     <TextView
-        android:id="@+id/row_text"
+        android:id="@+id/tvTodoContent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         tools:text="What needs to be done?"
         />
-
     <Button
+        android:id="@+id/btnDelete"
         android:layout_width="wrap_content"
-        android:text="Delete"
         android:layout_height="wrap_content"
-        android:id="@+id/row_delete" />
-
+        android:text="@string/delete"
+        />
 </LinearLayout>

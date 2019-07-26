@@ -1,6 +1,5 @@
-# Flux Architecture on Android
 
-I have tried MVC, MVP and Clean architecture on Android. But mostly I love the Flux architecture because of its **undirectional data flow** and **layering** features. However I can't find an approving implementation of Flux arichtecture, so I wirte RxFlux based on skimarxall's [RxFlux](https://github.com/skimarxall/RxFlux).
+I have tried MVC, MVP and Clean architecture on Android. But mostly I love the Flux architecture because of its **undirectional data flow** and **layering** features. However I can't find an approving implementation of Flux arichtecture, so I wirte RxFlux based on skimarxall's [RxFlux](https://github.com/skimarxall/RxFlux) and Google's Architecture Component.
 
 ## Getting started
 
@@ -8,12 +7,15 @@ I have tried MVC, MVP and Clean architecture on Android. But mostly I love the F
 
 ```
 dependencies {
-  // for old support package
-  implementation 'com.johnny.rxflux:rxflux:1.3.0'
-
   // for androidx
-  implementation 'com.johnny.rxflux:rxflux-androidx:1.3.0'
+  implementation 'com.johnny.rxflux:rxflux-androidx:1.3.6'
 }
+```
+
+**Quick Tutorial**
+
+```kotlin
+
 ```
 
 ## Introducing Flux Architecture
@@ -27,11 +29,12 @@ There are two **key features** to understand Flux:
 * The data flow is always **unidirectional**.
 
     An [unidirectional data flow](https://www.youtube.com/watch?v=i__969noyAM) is the **core** of the Flux architecture and is what makes it so easy to learn.
+
 It also provides great advantages when testing the application as discussed below.
 
 * The application is divided into **three main parts**:
 
-    - **View**: Application interface. It create actions in response to user interactions.
+    - **View**: Application interface(usally Activity/Fragment on Android). It create actions in response to user interactions.
     - **Dispatcher**: Central hub through which pass all actions and whose responsibility is to make them arrive to every Store.
     - **Store**: Maintain the state for a particular application domain. They respond to actions according to current state, execute business logic and emit a _change_ event when they are done. This event is used by the view to update its interface.
 

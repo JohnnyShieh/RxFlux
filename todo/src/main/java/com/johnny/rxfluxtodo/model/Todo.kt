@@ -22,28 +22,11 @@ package com.johnny.rxfluxtodo.model
  * @author Johnny Shieh (JohnnyShieh17@gmail.com)
  * @version 1.0
  */
-class Todo : Cloneable, Comparable<Todo> {
-
-    val id: Long
-    var isComplete: Boolean
-    var text: String
-
-    constructor(id: Long, text: String) {
-        this.id = id
-        this.text = text
-        this.isComplete = false
-    }
-
-    constructor(id: Long, text: String, complete: Boolean) {
-        this.id = id
-        this.text = text
-        this.isComplete = complete
-    }
-
-    public override fun clone(): Todo {
-        return Todo(id, text, isComplete)
-    }
-
+data class Todo(
+    val id: Long,
+    var text: String,
+    var isComplete: Boolean = false
+) : Comparable<Todo> {
     override fun compareTo(other: Todo): Int {
         return when {
             id == other.id -> 0
